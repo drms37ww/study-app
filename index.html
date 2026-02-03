@@ -1342,7 +1342,7 @@
 
     function renderStudyView() {
       const session = state.studySession;
-      if (!session || session.cards.length === 0) {
+      if (!session || session.cards.length === 0 || session.currentIndex >= session.cards.length) {
         return renderStudyComplete();
       }
 
