@@ -1343,12 +1343,12 @@
             <div class="flashcard-inner" id="flashcard-inner">
               <div class="flashcard-face flashcard-front">
                 <span class="flashcard-label">${state.settings.reverse ? 'Definition' : 'Term'}</span>
-                <h2>${formatText(front)}</h2>
+                <h2>${front}</h2>
                 ${frontImage ? `<img src="${frontImage}" alt=""/>` : ''}
               </div>
               <div class="flashcard-face flashcard-back">
                 <span class="flashcard-label">${state.settings.reverse ? 'Term' : 'Definition'}</span>
-                <h2>${formatText(back)}</h2>
+                <h2>${back}</h2>
                 ${backImage ? `<img src="${backImage}" alt=""/>` : ''}
               </div>
             </div>
@@ -1623,8 +1623,8 @@
                 <div class="list-item" onclick="editCard('${card.id}')">
                   <div class="list-item-content" style="flex: 1;">
                     <div class="list-item-text">
-                      <h3>${escapeHtml(card.term)}</h3>
-                      <p>${escapeHtml(card.definition)}</p>
+                      <h3>${stripHtml(card.term)}</h3>
+                      <p>${stripHtml(card.definition)}</p>
                     </div>
                   </div>
                   <button class="btn-icon" onclick="event.stopPropagation(); deleteCard('${card.id}')" style="color: var(--text-muted);">
@@ -1659,7 +1659,7 @@
         </div>
         <div class="container">
           <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 0.75rem; color: var(--text-secondary);">
-            <strong>Formatting:</strong> **bold**, ++underline++, *italic*
+            <strong>Tip:</strong> For bold/underline/italic, add the card here then format in Google Sheets.
           </div>
           <form onsubmit="saveCard(event)">
             <div class="form-group">
@@ -1708,17 +1708,17 @@
         </div>
         <div class="container">
           <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 0.75rem; color: var(--text-secondary);">
-            <strong>Formatting:</strong> **bold**, ++underline++, *italic*
+            <strong>Note:</strong> Editing here saves plain text. For formatting, edit in Google Sheets.
           </div>
           <form onsubmit="updateCard(event)">
             <div class="form-group">
               <label class="form-label">Term (Front) *</label>
-              <textarea class="form-input" id="card-term" required rows="3">${escapeHtml(card?.term || '')}</textarea>
+              <textarea class="form-input" id="card-term" required rows="3">${stripHtml(card?.term || '')}</textarea>
             </div>
             
             <div class="form-group">
               <label class="form-label">Definition (Back) *</label>
-              <textarea class="form-input" id="card-definition" required rows="3">${escapeHtml(card?.definition || '')}</textarea>
+              <textarea class="form-input" id="card-definition" required rows="3">${stripHtml(card?.definition || '')}</textarea>
             </div>
             
             <div class="form-group">
@@ -2447,20 +2447,10 @@
       return div.innerHTML;
     }
 
-    function formatText(text) {
-      if (!text) return '';
-      // Escape HTML first for safety
-      let formatted = escapeHtml(text);
-      // Bold: **text** or __text__
-      formatted = formatted.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-      // Underline: ++text++
-      formatted = formatted.replace(/\+\+(.+?)\+\+/g, '<u>$1</u>');
-      // Italic: *text* or _text_
-      formatted = formatted.replace(/\*(.+?)\*/g, '<em>$1</em>');
-      formatted = formatted.replace(/_(.+?)_/g, '<em>$1</em>');
-      // Line breaks
-      formatted = formatted.replace(/\n/g, '<br>');
-      return formatted;
+    function stripHtml(html) {
+      const div = document.createElement('div');
+      div.innerHTML = html || '';
+      return div.textContent || div.innerText || '';
     }
 
     // ============ EVENT LISTENERS ============
