@@ -1,11 +1,11 @@
-const CACHE_NAME = 'study-app-v2';
+const CACHE_NAME = 'study-app-v3';
 const ASSETS_TO_CACHE = [
   '/study-app/',
   '/study-app/index.html',
   '/study-app/manifest.json',
   '/study-app/icons/icon-192.png',
   '/study-app/icons/icon-512.png',
-  'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap'
+  'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap'
 ];
 
 // Install event - cache assets
