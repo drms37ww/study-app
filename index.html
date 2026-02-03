@@ -1343,12 +1343,12 @@
             <div class="flashcard-inner" id="flashcard-inner">
               <div class="flashcard-face flashcard-front">
                 <span class="flashcard-label">${state.settings.reverse ? 'Definition' : 'Term'}</span>
-                <h2>${front}</h2>
+                <h2>${formatText(front)}</h2>
                 ${frontImage ? `<img src="${frontImage}" alt=""/>` : ''}
               </div>
               <div class="flashcard-face flashcard-back">
                 <span class="flashcard-label">${state.settings.reverse ? 'Term' : 'Definition'}</span>
-                <h2>${back}</h2>
+                <h2>${formatText(back)}</h2>
                 ${backImage ? `<img src="${backImage}" alt=""/>` : ''}
               </div>
             </div>
@@ -1658,6 +1658,9 @@
           <div></div>
         </div>
         <div class="container">
+          <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 0.75rem; color: var(--text-secondary);">
+            <strong>Formatting:</strong> **bold**, ++underline++, *italic*
+          </div>
           <form onsubmit="saveCard(event)">
             <div class="form-group">
               <label class="form-label">Term (Front) *</label>
@@ -1704,6 +1707,9 @@
           <div></div>
         </div>
         <div class="container">
+          <div style="background: var(--bg-tertiary); padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 0.75rem; color: var(--text-secondary);">
+            <strong>Formatting:</strong> **bold**, ++underline++, *italic*
+          </div>
           <form onsubmit="updateCard(event)">
             <div class="form-group">
               <label class="form-label">Term (Front) *</label>
@@ -2439,6 +2445,22 @@
       const div = document.createElement('div');
       div.textContent = text;
       return div.innerHTML;
+    }
+
+    function formatText(text) {
+      if (!text) return '';
+      // Escape HTML first for safety
+      let formatted = escapeHtml(text);
+      // Bold: **text** or __text__
+      formatted = formatted.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      // Underline: ++text++
+      formatted = formatted.replace(/\+\+(.+?)\+\+/g, '<u>$1</u>');
+      // Italic: *text* or _text_
+      formatted = formatted.replace(/\*(.+?)\*/g, '<em>$1</em>');
+      formatted = formatted.replace(/_(.+?)_/g, '<em>$1</em>');
+      // Line breaks
+      formatted = formatted.replace(/\n/g, '<br>');
+      return formatted;
     }
 
     // ============ EVENT LISTENERS ============
