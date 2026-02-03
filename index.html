@@ -2145,7 +2145,6 @@
         path,
         name,
         parentPath,
-        tags: [],
         order
       };
       
@@ -2159,7 +2158,6 @@
           path: folder.path,
           name: folder.name,
           parentPath: folder.parentPath,
-          tags: '',
           order: folder.order
         });
       } catch (error) {
@@ -2202,8 +2200,7 @@
       const deck = {
         id: 'deck_' + Date.now(),
         name,
-        folderPath,
-        tags: []
+        folderPath
       };
       
       // Add locally
@@ -2215,8 +2212,7 @@
         await apiCall('addDeck', {
           id: deck.id,
           name: deck.name,
-          folderPath: deck.folderPath,
-          tags: ''
+          folderPath: deck.folderPath
         });
       } catch (error) {
         console.error('Failed to sync deck:', error);
