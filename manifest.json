@@ -2,7 +2,7 @@
   "name": "Study App",
   "short_name": "Study",
   "description": "Flashcards + Todos for efficient studying",
-  "start_url": "/",
+  "start_url": "/study-app/",
   "display": "standalone",
   "background_color": "#0d0d0d",
   "theme_color": "#0d0d0d",
