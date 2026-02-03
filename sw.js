@@ -1,10 +1,10 @@
-const CACHE_NAME = 'study-app-v1';
+const CACHE_NAME = 'study-app-v2';
 const ASSETS_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png',
+  '/study-app/',
+  '/study-app/index.html',
+  '/study-app/manifest.json',
+  '/study-app/icons/icon-192.png',
+  '/study-app/icons/icon-512.png',
   'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap'
 ];
 
@@ -73,7 +73,7 @@ self.addEventListener('fetch', (event) => {
       .catch(() => {
         // Return offline fallback for HTML
         if (event.request.headers.get('accept').includes('text/html')) {
-          return caches.match('/index.html');
+          return caches.match('/study-app/index.html');
         }
       })
   );
@@ -85,11 +85,11 @@ self.addEventListener('push', (event) => {
   
   const options = {
     body: data.body || 'Time to study!',
-    icon: '/icons/icon-192.png',
-    badge: '/icons/icon-192.png',
-    vibrate: [100, 50, 100],
+    icon: '/study-app/icons/icon-192.png',
+    badge: '/study-app/icons/icon-192.png',
+    silent: true,
     data: {
-      url: data.url || '/'
+      url: data.url || '/study-app/'
     }
   };
 
