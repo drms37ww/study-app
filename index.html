@@ -252,6 +252,21 @@
       margin-bottom: 2px;
     }
 
+    .list-item-text h3 u,
+    .list-item-text p u {
+      text-decoration: underline;
+    }
+
+    .list-item-text h3 strong,
+    .list-item-text p strong {
+      font-weight: 700;
+    }
+
+    .list-item-text h3 em,
+    .list-item-text p em {
+      font-style: italic;
+    }
+
     .list-item-text p {
       font-size: 0.875rem;
       color: var(--text-secondary);
@@ -1640,8 +1655,8 @@
                 <div class="list-item" onclick="editCard('${card.id}')">
                   <div class="list-item-content" style="flex: 1;">
                     <div class="list-item-text">
-                      <h3>${stripHtml(card.term)}</h3>
-                      <p>${stripHtml(card.definition)}</p>
+                      <h3>${card.term}</h3>
+                      <p>${card.definition}</p>
                     </div>
                   </div>
                   <button class="btn-icon" onclick="event.stopPropagation(); deleteCard('${card.id}')" style="color: var(--text-muted);">
