@@ -11,8 +11,13 @@
   <link rel="apple-touch-icon" href="icons/icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
+    @font-face {
+      font-family: 'Yu Gothic';
+      src: local('Yu Gothic Medium'), local('YuGothic-Medium');
+    }
+    
     :root {
       --bg-primary: #0d0d0d;
       --bg-secondary: #1a1a1a;
@@ -40,7 +45,7 @@
     }
 
     body {
-      font-family: 'Roboto', 'Noto Sans JP', sans-serif;
+      font-family: 'Roboto', 'Yu Gothic', 'YuGothic', sans-serif;
       background: var(--bg-primary);
       color: var(--text-primary);
       min-height: 100vh;
@@ -424,6 +429,18 @@
       font-size: 1.5rem;
       font-weight: 400;
       word-break: break-word;
+    }
+
+    .flashcard-face h2 u {
+      text-decoration: underline;
+    }
+
+    .flashcard-face h2 strong {
+      font-weight: 700;
+    }
+
+    .flashcard-face h2 em {
+      font-style: italic;
     }
 
     .flashcard-face img {
