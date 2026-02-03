@@ -862,10 +862,15 @@
       cursor: pointer;
       padding: 0;
       line-height: 1;
+      font-size: 0.75rem;
     }
 
     .reminder-chip button:hover {
       color: var(--error);
+    }
+
+    .reminder-chip button:first-of-type:hover {
+      color: var(--accent);
     }
   </style>
 </head>
@@ -1454,7 +1459,7 @@
             </div>
             
             <div class="form-group">
-              <label class="form-label">Reminder Time (for auto-generated reminders)</label>
+              <label class="form-label">Default Reminder Time</label>
               <input type="time" class="form-input" id="todo-time" value="09:00">
             </div>
             
@@ -1719,7 +1724,9 @@
     function addManualReminder() {
       const date = prompt('Enter reminder date (YYYY-MM-DD):');
       if (date && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
-        const time = prompt('Enter reminder time (HH:MM, 24-hour format):', '09:00');
+        const timeInput = document.getElementById('todo-time');
+        const defaultTime = timeInput ? timeInput.value : '09:00';
+        const time = prompt('Enter reminder time (HH:MM, 24-hour format):', defaultTime);
         if (time && /^\d{2}:\d{2}$/.test(time)) {
           todoReminders.push(`${date}T${time}`);
           renderReminders();
@@ -1735,15 +1742,26 @@
     function renderReminders() {
       const container = document.getElementById('reminders-container');
       container.innerHTML = todoReminders.map((datetime, i) => {
-        const [date, time] = datetime.includes('T') ? datetime.split('T') : [datetime, ''];
+        const [date, time] = datetime.includes('T') ? datetime.split('T') : [datetime, '09:00'];
         const timeStr = time ? ` ${formatTime(time)}` : '';
         return `
           <div class="reminder-chip">
             ${formatDate(date)}${timeStr}
+            <button type="button" onclick="editReminderTime(${i})" style="color: var(--accent); margin-left: 4px;">✎</button>
             <button type="button" onclick="removeReminder(${i})">×</button>
           </div>
         `;
       }).join('');
+    }
+
+    function editReminderTime(index) {
+      const datetime = todoReminders[index];
+      const [date, currentTime] = datetime.includes('T') ? datetime.split('T') : [datetime, '09:00'];
+      const newTime = prompt('Enter new time (HH:MM, 24-hour format):', currentTime || '09:00');
+      if (newTime && /^\d{2}:\d{2}$/.test(newTime)) {
+        todoReminders[index] = `${date}T${newTime}`;
+        renderReminders();
+      }
     }
 
     function formatTime(time) {
