@@ -1185,14 +1185,8 @@
         .filter(f => f.parentPath === state.currentFolder)
         .sort((a, b) => (a.order || 999) - (b.order || 999));
       
-      // Get decks in this folder (direct + tag-matched)
-      const decks = state.decks.filter(d => {
-        if (d.folderPath === state.currentFolder) return true;
-        if (folder && folder.tags && d.tags) {
-          return folder.tags.some(tag => d.tags.includes(tag));
-        }
-        return false;
-      });
+      // Get decks in this folder (direct only)
+      const decks = state.decks.filter(d => d.folderPath === state.currentFolder);
 
       const parentPath = folder?.parentPath || null;
 
@@ -1555,11 +1549,6 @@
             </div>
             
             <div class="form-group">
-              <label class="form-label">Tags (comma-separated)</label>
-              <input type="text" class="form-input" id="folder-tags" placeholder="e.g., math, algebra">
-            </div>
-            
-            <div class="form-group">
               <label class="form-label">Order (lower = first)</label>
               <input type="number" class="form-input" id="folder-order" value="999" min="1">
             </div>
@@ -1592,11 +1581,6 @@
             <div class="form-group">
               <label class="form-label">Folder</label>
               <input type="text" class="form-input" value="${folder ? folder.name : 'None'}" disabled>
-            </div>
-            
-            <div class="form-group">
-              <label class="form-label">Tags (comma-separated)</label>
-              <input type="text" class="form-input" id="deck-tags" placeholder="e.g., vocabulary, chapter1">
             </div>
             
             <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 24px;">
@@ -1797,14 +1781,7 @@
     }
 
     function getDeckCountInFolder(folderPath) {
-      const folder = state.folders.find(f => f.path === folderPath);
-      return state.decks.filter(d => {
-        if (d.folderPath === folderPath) return true;
-        if (folder && folder.tags && d.tags) {
-          return folder.tags.some(tag => d.tags.includes(tag));
-        }
-        return false;
-      }).length;
+      return state.decks.filter(d => d.folderPath === folderPath).length;
     }
 
     function formatDate(dateStr) {
@@ -2158,7 +2135,6 @@
       event.preventDefault();
       
       const name = document.getElementById('folder-name').value.trim();
-      const tags = document.getElementById('folder-tags').value.trim();
       const order = parseInt(document.getElementById('folder-order').value) || 999;
       const parentPath = state.editingParentFolder || '';
       
@@ -2170,7 +2146,7 @@
         path,
         name,
         parentPath,
-        tags: tags ? tags.split(',').map(t => t.trim()) : [],
+        tags: [],
         order
       };
       
@@ -2184,7 +2160,7 @@
           path: folder.path,
           name: folder.name,
           parentPath: folder.parentPath,
-          tags: tags,
+          tags: '',
           order: folder.order
         });
       } catch (error) {
@@ -2222,14 +2198,13 @@
       event.preventDefault();
       
       const name = document.getElementById('deck-name').value.trim();
-      const tags = document.getElementById('deck-tags').value.trim();
       const folderPath = state.editingParentFolder || '';
       
       const deck = {
         id: 'deck_' + Date.now(),
         name,
         folderPath,
-        tags: tags ? tags.split(',').map(t => t.trim()) : [],
+        tags: [],
         createdAt: new Date().toISOString()
       };
       
@@ -2243,7 +2218,7 @@
           id: deck.id,
           name: deck.name,
           folderPath: deck.folderPath,
-          tags: tags
+          tags: ''
         });
       } catch (error) {
         console.error('Failed to sync deck:', error);
