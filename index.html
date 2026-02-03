@@ -1,0 +1,1932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0d0d0d">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Study App</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #0d0d0d;
+      --bg-secondary: #1a1a1a;
+      --bg-tertiary: #252525;
+      --bg-card: #1e1e1e;
+      --text-primary: #f0f0f0;
+      --text-secondary: #a0a0a0;
+      --text-muted: #666666;
+      --accent: #4a9eff;
+      --accent-hover: #6bb3ff;
+      --success: #4ade80;
+      --error: #f87171;
+      --warning: #fbbf24;
+      --border: #333333;
+      --shadow: rgba(0, 0, 0, 0.5);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --transition: 0.2s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', 'Noto Sans JP', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.5;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ============ LAYOUT ============ */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      padding-bottom: 100px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header h1 {
+      font-size: 1.25rem;
+      font-weight: 500;
+    }
+
+    .header-back {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    /* ============ NAVIGATION ============ */
+    .nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      z-index: 100;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      padding: 8px 16px;
+      transition: var(--transition);
+    }
+
+    .nav-item.active {
+      color: var(--accent);
+    }
+
+    .nav-item svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .nav-item span {
+      font-size: 0.75rem;
+    }
+
+    /* ============ BUTTONS ============ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #000;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-secondary {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-card);
+    }
+
+    .btn-danger {
+      background: var(--error);
+      color: #000;
+    }
+
+    .btn-icon {
+      padding: 8px;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-sm);
+    }
+
+    .btn-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* ============ CARDS & LISTS ============ */
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 16px;
+      border: 1px solid var(--border);
+      transition: var(--transition);
+    }
+
+    .card:hover {
+      border-color: var(--text-muted);
+    }
+
+    .card-clickable {
+      cursor: pointer;
+    }
+
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .list-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .list-item:hover {
+      border-color: var(--accent);
+    }
+
+    .list-item-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .list-item-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .list-item-icon svg {
+      width: 20px;
+      height: 20px;
+      color: var(--accent);
+    }
+
+    .list-item-text h3 {
+      font-size: 1rem;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .list-item-text p {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .list-item-arrow {
+      color: var(--text-muted);
+    }
+
+    /* ============ FEATURED DECKS ============ */
+    .featured-section {
+      margin-bottom: 32px;
+    }
+
+    .featured-title {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .featured-decks {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .featured-deck {
+      background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-card));
+      border-radius: var(--radius);
+      padding: 16px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .featured-deck:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .featured-deck h3 {
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .featured-deck p {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .featured-deck .due-date {
+      font-size: 0.7rem;
+      color: var(--warning);
+      margin-top: 8px;
+    }
+
+    /* ============ FORMS ============ */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-family: inherit;
+      transition: var(--transition);
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .form-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    /* ============ FLASHCARD STUDY ============ */
+    .study-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 160px);
+      padding: 20px;
+    }
+
+    .study-progress {
+      width: 100%;
+      max-width: 500px;
+      margin-bottom: 24px;
+    }
+
+    .progress-bar {
+      height: 4px;
+      background: var(--bg-tertiary);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    .progress-text {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .flashcard {
+      width: 100%;
+      max-width: 500px;
+      aspect-ratio: 3/2;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+
+    .flashcard-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transition: none;
+      transform-style: preserve-3d;
+    }
+
+    .flashcard-inner.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .flashcard-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      border: 2px solid var(--border);
+      text-align: center;
+      overflow: auto;
+    }
+
+    .flashcard-back {
+      transform: rotateY(180deg);
+    }
+
+    .flashcard-face h2 {
+      font-size: 1.5rem;
+      font-weight: 400;
+      word-break: break-word;
+    }
+
+    .flashcard-face img {
+      max-width: 100%;
+      max-height: 60%;
+      object-fit: contain;
+      margin-top: 12px;
+      border-radius: var(--radius-sm);
+    }
+
+    .flashcard-label {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .study-actions {
+      display: flex;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .study-btn {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+    }
+
+    .study-btn svg {
+      width: 32px;
+      height: 32px;
+    }
+
+    .study-btn.wrong {
+      background: rgba(248, 113, 113, 0.2);
+      color: var(--error);
+    }
+
+    .study-btn.wrong:hover {
+      background: rgba(248, 113, 113, 0.3);
+    }
+
+    .study-btn.correct {
+      background: rgba(74, 222, 128, 0.2);
+      color: var(--success);
+    }
+
+    .study-btn.correct:hover {
+      background: rgba(74, 222, 128, 0.3);
+    }
+
+    .study-options {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .toggle-btn {
+      padding: 8px 16px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .toggle-btn.active {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+    }
+
+    /* ============ TODO LIST ============ */
+    .todo-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 16px;
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      margin-bottom: 12px;
+    }
+
+    .todo-checkbox {
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--border);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: var(--transition);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .todo-checkbox:hover {
+      border-color: var(--accent);
+    }
+
+    .todo-checkbox.checked {
+      background: var(--success);
+      border-color: var(--success);
+    }
+
+    .todo-content {
+      flex: 1;
+    }
+
+    .todo-title {
+      font-size: 1rem;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .todo-meta {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .todo-due {
+      color: var(--warning);
+    }
+
+    .todo-due.overdue {
+      color: var(--error);
+    }
+
+    .todo-decks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .todo-deck-link {
+      padding: 6px 12px;
+      background: var(--bg-tertiary);
+      border-radius: 16px;
+      font-size: 0.75rem;
+      color: var(--accent);
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+    }
+
+    .todo-deck-link:hover {
+      background: var(--accent);
+      color: #000;
+    }
+
+    .todo-reminders {
+      margin-top: 8px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* ============ MODALS ============ */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .modal {
+      background: var(--bg-secondary);
+      border-radius: var(--radius);
+      width: 100%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .modal-header h2 {
+      font-size: 1.25rem;
+      font-weight: 500;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+
+    .modal-footer {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      padding: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ============ STUDY COMPLETE ============ */
+    .study-complete {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .study-complete h2 {
+      font-size: 1.5rem;
+      margin-bottom: 16px;
+    }
+
+    .study-stats {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin: 24px 0;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .stat-value.correct {
+      color: var(--success);
+    }
+
+    .stat-value.wrong {
+      color: var(--error);
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .study-complete-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+
+    /* ============ LOADING & SYNC ============ */
+    .sync-indicator {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 8px 16px;
+      background: var(--bg-secondary);
+      border-radius: 20px;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 200;
+      border: 1px solid var(--border);
+    }
+
+    .sync-indicator.syncing {
+      color: var(--accent);
+    }
+
+    .sync-indicator.error {
+      color: var(--error);
+    }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid currentColor;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      gap: 16px;
+    }
+
+    .loading-screen .spinner {
+      width: 40px;
+      height: 40px;
+      border-width: 3px;
+      color: var(--accent);
+    }
+
+    /* ============ EMPTY STATES ============ */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-secondary);
+    }
+
+    .empty-state svg {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    .empty-state h3 {
+      font-size: 1.125rem;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+
+    /* ============ SWIPE HINTS ============ */
+    .swipe-hint {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .swipe-hint.left {
+      left: -60px;
+    }
+
+    .swipe-hint.right {
+      right: -60px;
+    }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 600px) {
+      .featured-decks {
+        grid-template-columns: 1fr;
+      }
+
+      .flashcard {
+        aspect-ratio: 4/3;
+      }
+
+      .study-btn {
+        width: 64px;
+        height: 64px;
+      }
+
+      .study-btn svg {
+        width: 28px;
+        height: 28px;
+      }
+
+      .swipe-hint {
+        display: none;
+      }
+    }
+
+    /* ============ HIDDEN ============ */
+    .hidden {
+      display: none !important;
+    }
+
+    /* ============ SECTION HEADER ============ */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ============ REMINDER CHIPS ============ */
+    .reminder-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .reminder-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      background: var(--bg-tertiary);
+      border-radius: 12px;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .reminder-chip button {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0;
+      line-height: 1;
+    }
+
+    .reminder-chip button:hover {
+      color: var(--error);
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+      <div class="spinner"></div>
+      <p>Loading...</p>
+    </div>
+  </div>
+
+  <!-- Sync Indicator -->
+  <div id="sync-indicator" class="sync-indicator hidden">
+    <div class="spinner"></div>
+    <span>Syncing...</span>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="nav">
+    <button class="nav-item active" data-view="flashcards">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="2" y="4" width="20" height="16" rx="2"/>
+        <line x1="2" y1="10" x2="22" y2="10"/>
+      </svg>
+      <span>Flashcards</span>
+    </button>
+    <button class="nav-item" data-view="todos">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 11l3 3L22 4"/>
+        <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+      </svg>
+      <span>Todos</span>
+    </button>
+  </nav>
+
+  <script>
+    // ============ CONFIGURATION ============
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbweV3aDJpY4Mf0TZQdeeOFZK_7Taq6oYmaDLmA5guaSPKR3SyP_ehwdG4tfWykr9nTV_g/exec';
+
+    // ============ STATE ============
+    let state = {
+      folders: [],
+      decks: [],
+      cards: [],
+      todos: [],
+      currentView: 'flashcards',
+      currentFolder: null,
+      studySession: null,
+      settings: {
+        shuffle: true,
+        reverse: false
+      }
+    };
+
+    // ============ LOCAL STORAGE ============
+    function saveToLocal() {
+      localStorage.setItem('studyAppData', JSON.stringify({
+        folders: state.folders,
+        decks: state.decks,
+        cards: state.cards,
+        todos: state.todos,
+        settings: state.settings
+      }));
+    }
+
+    function loadFromLocal() {
+      const data = localStorage.getItem('studyAppData');
+      if (data) {
+        const parsed = JSON.parse(data);
+        state.folders = parsed.folders || [];
+        state.decks = parsed.decks || [];
+        state.cards = parsed.cards || [];
+        state.todos = parsed.todos || [];
+        state.settings = parsed.settings || { shuffle: true, reverse: false };
+        return true;
+      }
+      return false;
+    }
+
+    // ============ API ============
+    async function apiCall(action, params = {}) {
+      const url = new URL(APPS_SCRIPT_URL);
+      url.searchParams.set('action', action);
+      Object.entries(params).forEach(([k, v]) => {
+        url.searchParams.set(k, typeof v === 'object' ? JSON.stringify(v) : v);
+      });
+
+      try {
+        const response = await fetch(url.toString());
+        return await response.json();
+      } catch (error) {
+        console.error('API Error:', error);
+        throw error;
+      }
+    }
+
+    async function syncData() {
+      showSyncIndicator(true);
+      try {
+        const data = await apiCall('syncAll');
+        state.folders = data.folders || [];
+        state.decks = data.decks || [];
+        state.cards = data.cards || [];
+        state.todos = data.todos || [];
+        saveToLocal();
+        showSyncIndicator(false);
+        return true;
+      } catch (error) {
+        showSyncIndicator(false, true);
+        return false;
+      }
+    }
+
+    function showSyncIndicator(show, error = false) {
+      const indicator = document.getElementById('sync-indicator');
+      if (show) {
+        indicator.classList.remove('hidden', 'error');
+        indicator.classList.add('syncing');
+        indicator.innerHTML = '<div class="spinner"></div><span>Syncing...</span>';
+      } else if (error) {
+        indicator.classList.remove('hidden', 'syncing');
+        indicator.classList.add('error');
+        indicator.innerHTML = '<span>Sync failed</span>';
+        setTimeout(() => indicator.classList.add('hidden'), 3000);
+      } else {
+        indicator.classList.add('hidden');
+      }
+    }
+
+    // ============ NOTIFICATIONS ============
+    async function requestNotificationPermission() {
+      if ('Notification' in window && Notification.permission === 'default') {
+        await Notification.requestPermission();
+      }
+    }
+
+    function scheduleReminders() {
+      if (!('Notification' in window) || Notification.permission !== 'granted') return;
+
+      state.todos.forEach(todo => {
+        if (!todo.reminders || todo.completed) return;
+        
+        todo.reminders.forEach(reminderDate => {
+          const reminderTime = new Date(reminderDate).getTime();
+          const now = Date.now();
+          const delay = reminderTime - now;
+
+          if (delay > 0 && delay < 86400000 * 14) { // Within 14 days
+            setTimeout(() => {
+              new Notification('Study Reminder', {
+                body: todo.title,
+                icon: 'icons/icon-192.png',
+                tag: todo.id
+              });
+            }, delay);
+          }
+        });
+      });
+    }
+
+    // ============ SPACED REPETITION ============
+    function getWeightedCards(cards, shuffle = true) {
+      // Cards with higher wrongCount appear more frequently
+      const weighted = [];
+      cards.forEach(card => {
+        const weight = Math.max(1, (card.wrongCount || 0) * 2 + 1);
+        for (let i = 0; i < weight; i++) {
+          weighted.push({ ...card });
+        }
+      });
+
+      if (shuffle) {
+        for (let i = weighted.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [weighted[i], weighted[j]] = [weighted[j], weighted[i]];
+        }
+      }
+
+      // Remove duplicates while keeping weighted order
+      const seen = new Set();
+      return weighted.filter(card => {
+        if (seen.has(card.id)) return false;
+        seen.add(card.id);
+        return true;
+      });
+    }
+
+    // ============ RENDER FUNCTIONS ============
+    function render() {
+      const app = document.getElementById('app');
+      
+      switch (state.currentView) {
+        case 'flashcards':
+          app.innerHTML = renderFlashcardsView();
+          break;
+        case 'todos':
+          app.innerHTML = renderTodosView();
+          break;
+        case 'folder':
+          app.innerHTML = renderFolderView();
+          break;
+        case 'study':
+          app.innerHTML = renderStudyView();
+          break;
+        case 'study-setup':
+          app.innerHTML = renderStudySetupView();
+          break;
+        case 'add-todo':
+          app.innerHTML = renderAddTodoView();
+          break;
+      }
+
+      attachEventListeners();
+    }
+
+    function renderFlashcardsView() {
+      const upcomingDecks = getUpcomingDecks();
+      const rootFolders = state.folders
+        .filter(f => !f.parentPath)
+        .sort((a, b) => (a.order || 999) - (b.order || 999));
+
+      return `
+        <div class="header">
+          <h1>Flashcards</h1>
+          <button class="btn-icon" onclick="syncData().then(render)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M23 4v6h-6M1 20v-6h6"/>
+              <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+            </svg>
+          </button>
+        </div>
+        <div class="container">
+          ${upcomingDecks.length > 0 ? `
+            <div class="featured-section">
+              <h2 class="featured-title">Study Soon</h2>
+              <div class="featured-decks">
+                ${upcomingDecks.slice(0, 3).map(item => `
+                  <div class="featured-deck" data-deck-id="${item.deck.id}">
+                    <h3>${item.deck.name}</h3>
+                    <p>${getCardCount(item.deck.id)} cards</p>
+                    <div class="due-date">Due: ${formatDate(item.dueDate)}</div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          ` : ''}
+          
+          <div class="section-header">
+            <h2 class="section-title">Subjects</h2>
+          </div>
+          <div class="list">
+            ${rootFolders.length > 0 ? rootFolders.map(folder => `
+              <div class="list-item" data-folder-path="${folder.path}">
+                <div class="list-item-content">
+                  <div class="list-item-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>
+                    </svg>
+                  </div>
+                  <div class="list-item-text">
+                    <h3>${folder.name}</h3>
+                    <p>${getSubfolderCount(folder.path)} folders, ${getDeckCountInFolder(folder.path)} decks</p>
+                  </div>
+                </div>
+                <span class="list-item-arrow">→</span>
+              </div>
+            `).join('') : `
+              <div class="empty-state">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>
+                </svg>
+                <h3>No folders yet</h3>
+                <p>Add folders in Google Sheets</p>
+              </div>
+            `}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderFolderView() {
+      const folder = state.folders.find(f => f.path === state.currentFolder);
+      const subfolders = state.folders
+        .filter(f => f.parentPath === state.currentFolder)
+        .sort((a, b) => (a.order || 999) - (b.order || 999));
+      
+      // Get decks in this folder (direct + tag-matched)
+      const decks = state.decks.filter(d => {
+        if (d.folderPath === state.currentFolder) return true;
+        if (folder && folder.tags && d.tags) {
+          return folder.tags.some(tag => d.tags.includes(tag));
+        }
+        return false;
+      });
+
+      const parentPath = folder?.parentPath || null;
+
+      return `
+        <div class="header">
+          <button class="header-back" onclick="navigateBack('${parentPath || ''}')">
+            ← Back
+          </button>
+          <h1>${folder?.name || 'Folder'}</h1>
+          <div></div>
+        </div>
+        <div class="container">
+          ${subfolders.length > 0 ? `
+            <div class="section-header">
+              <h2 class="section-title">Folders</h2>
+            </div>
+            <div class="list">
+              ${subfolders.map(f => `
+                <div class="list-item" data-folder-path="${f.path}">
+                  <div class="list-item-content">
+                    <div class="list-item-icon">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>
+                      </svg>
+                    </div>
+                    <div class="list-item-text">
+                      <h3>${f.name}</h3>
+                      <p>${getDeckCountInFolder(f.path)} decks</p>
+                    </div>
+                  </div>
+                  <span class="list-item-arrow">→</span>
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+          
+          ${decks.length > 0 ? `
+            <div class="section-header" style="margin-top: ${subfolders.length > 0 ? '24px' : '0'}">
+              <h2 class="section-title">Decks</h2>
+            </div>
+            <div class="list">
+              ${decks.map(deck => `
+                <div class="list-item" data-deck-id="${deck.id}">
+                  <div class="list-item-content">
+                    <div class="list-item-icon">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="4" width="20" height="16" rx="2"/>
+                        <line x1="2" y1="10" x2="22" y2="10"/>
+                      </svg>
+                    </div>
+                    <div class="list-item-text">
+                      <h3>${deck.name}</h3>
+                      <p>${getCardCount(deck.id)} cards</p>
+                    </div>
+                  </div>
+                  <span class="list-item-arrow">→</span>
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+
+          ${subfolders.length === 0 && decks.length === 0 ? `
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="4" width="20" height="16" rx="2"/>
+              </svg>
+              <h3>Empty folder</h3>
+              <p>Add decks in Google Sheets</p>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    function renderStudySetupView() {
+      const deck = state.decks.find(d => d.id === state.studySession?.deckId);
+      const cardCount = getCardCount(state.studySession?.deckId);
+
+      return `
+        <div class="header">
+          <button class="header-back" onclick="cancelStudy()">← Back</button>
+          <h1>${deck?.name || 'Study'}</h1>
+          <div></div>
+        </div>
+        <div class="container">
+          <div class="card" style="text-align: center; padding: 32px;">
+            <h2 style="margin-bottom: 8px;">${deck?.name}</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 24px;">${cardCount} cards</p>
+            
+            <div class="study-options">
+              <button class="toggle-btn ${state.settings.shuffle ? 'active' : ''}" data-toggle="shuffle">
+                Shuffle ${state.settings.shuffle ? '✓' : ''}
+              </button>
+              <button class="toggle-btn ${state.settings.reverse ? 'active' : ''}" data-toggle="reverse">
+                Reverse ${state.settings.reverse ? '✓' : ''}
+              </button>
+            </div>
+            
+            <button class="btn btn-primary" onclick="startStudy()" style="width: 100%; margin-top: 16px;">
+              Start Studying
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderStudyView() {
+      const session = state.studySession;
+      if (!session || session.cards.length === 0) {
+        return renderStudyComplete();
+      }
+
+      const card = session.cards[session.currentIndex];
+      const progress = ((session.currentIndex) / session.totalCards) * 100;
+      const front = state.settings.reverse ? card.definition : card.term;
+      const back = state.settings.reverse ? card.term : card.definition;
+      const frontImage = state.settings.reverse ? card.imageBack : card.imageFront;
+      const backImage = state.settings.reverse ? card.imageFront : card.imageBack;
+
+      return `
+        <div class="header">
+          <button class="header-back" onclick="cancelStudy()">← Exit</button>
+          <h1>Studying</h1>
+          <div></div>
+        </div>
+        <div class="study-container">
+          <div class="study-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: ${progress}%"></div>
+            </div>
+            <div class="progress-text">
+              <span>${session.currentIndex + 1} / ${session.totalCards}</span>
+              <span style="color: var(--success)">✓ ${session.correct}</span>
+              <span style="color: var(--error)">✗ ${session.wrong}</span>
+            </div>
+          </div>
+
+          <div class="flashcard" id="flashcard">
+            <div class="flashcard-inner" id="flashcard-inner">
+              <div class="flashcard-face flashcard-front">
+                <span class="flashcard-label">${state.settings.reverse ? 'Definition' : 'Term'}</span>
+                <h2>${front}</h2>
+                ${frontImage ? `<img src="${frontImage}" alt=""/>` : ''}
+              </div>
+              <div class="flashcard-face flashcard-back">
+                <span class="flashcard-label">${state.settings.reverse ? 'Term' : 'Definition'}</span>
+                <h2>${back}</h2>
+                ${backImage ? `<img src="${backImage}" alt=""/>` : ''}
+              </div>
+            </div>
+          </div>
+
+          <div class="study-actions">
+            <button class="study-btn wrong" onclick="markCard(false)" title="Wrong (←)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+            <button class="study-btn correct" onclick="markCard(true)" title="Correct (→)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderStudyComplete() {
+      const session = state.studySession;
+      const hasWrongCards = session.wrongCards.length > 0;
+
+      return `
+        <div class="header">
+          <button class="header-back" onclick="cancelStudy()">← Done</button>
+          <h1>Complete!</h1>
+          <div></div>
+        </div>
+        <div class="study-complete">
+          <h2>Session Complete!</h2>
+          <div class="study-stats">
+            <div class="stat">
+              <div class="stat-value correct">${session.correct}</div>
+              <div class="stat-label">Correct</div>
+            </div>
+            <div class="stat">
+              <div class="stat-value wrong">${session.wrong}</div>
+              <div class="stat-label">Wrong</div>
+            </div>
+          </div>
+          <div class="study-complete-actions">
+            ${hasWrongCards ? `
+              <button class="btn btn-primary" onclick="retryWrongCards()">
+                Retry Wrong Cards (${session.wrongCards.length})
+              </button>
+            ` : ''}
+            <button class="btn btn-secondary" onclick="restartDeck()">
+              Study Again
+            </button>
+            <button class="btn btn-secondary" onclick="cancelStudy()">
+              Back to Flashcards
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderTodosView() {
+      const activeTodos = state.todos.filter(t => !t.completed);
+
+      return `
+        <div class="header">
+          <h1>Todos</h1>
+          <button class="btn-icon" onclick="showAddTodo()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </button>
+        </div>
+        <div class="container">
+          ${activeTodos.length > 0 ? activeTodos.map(todo => `
+            <div class="todo-item" data-todo-id="${todo.id}">
+              <div class="todo-checkbox" onclick="completeTodo('${todo.id}')"></div>
+              <div class="todo-content">
+                <div class="todo-title">${todo.title}</div>
+                ${todo.dueDate ? `
+                  <div class="todo-meta">
+                    <span class="todo-due ${isOverdue(todo.dueDate) ? 'overdue' : ''}">
+                      Due: ${formatDate(todo.dueDate)}
+                    </span>
+                  </div>
+                ` : ''}
+                ${todo.linkedDecks && todo.linkedDecks.length > 0 ? `
+                  <div class="todo-decks">
+                    ${todo.linkedDecks.map(deckId => {
+                      const deck = state.decks.find(d => d.id === deckId);
+                      return deck ? `
+                        <button class="todo-deck-link" onclick="event.stopPropagation(); openDeckFromTodo('${deckId}')">
+                          📚 ${deck.name}
+                        </button>
+                      ` : '';
+                    }).join('')}
+                  </div>
+                ` : ''}
+                ${todo.reminders && todo.reminders.length > 0 ? `
+                  <div class="todo-reminders">
+                    🔔 ${todo.reminders.length} reminder${todo.reminders.length > 1 ? 's' : ''}
+                  </div>
+                ` : ''}
+              </div>
+              <button class="btn-icon" onclick="event.stopPropagation(); deleteTodo('${todo.id}')" style="color: var(--text-muted);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;">
+                  <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+                </svg>
+              </button>
+            </div>
+          `).join('') : `
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 11l3 3L22 4"/>
+                <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+              </svg>
+              <h3>No todos</h3>
+              <p>Add a todo to get started</p>
+            </div>
+          `}
+        </div>
+      `;
+    }
+
+    function renderAddTodoView() {
+      return `
+        <div class="header">
+          <button class="header-back" onclick="state.currentView = 'todos'; render();">← Cancel</button>
+          <h1>Add Todo</h1>
+          <div></div>
+        </div>
+        <div class="container">
+          <form id="todo-form" onsubmit="saveTodo(event)">
+            <div class="form-group">
+              <label class="form-label">Title *</label>
+              <input type="text" class="form-input" id="todo-title" required placeholder="What do you need to study?">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Due Date</label>
+              <input type="date" class="form-input" id="todo-due">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Link Decks</label>
+              <select class="form-input" id="todo-decks" multiple style="height: auto; min-height: 100px;">
+                ${state.decks.map(deck => `
+                  <option value="${deck.id}">${deck.name}</option>
+                `).join('')}
+              </select>
+              <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Hold Ctrl/Cmd to select multiple</p>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Reminders</label>
+              <div id="reminders-container" class="reminder-chips"></div>
+              <div style="display: flex; gap: 8px; margin-top: 8px;">
+                <button type="button" class="btn btn-secondary" style="flex: 1; font-size: 0.875rem;" onclick="autoGenerateReminders()">
+                  Auto (1,3,7,14 days)
+                </button>
+                <button type="button" class="btn btn-secondary" style="font-size: 0.875rem;" onclick="addManualReminder()">
+                  + Add
+                </button>
+              </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 24px;">
+              Save Todo
+            </button>
+          </form>
+        </div>
+      `;
+    }
+
+    // ============ HELPER FUNCTIONS ============
+    function getUpcomingDecks() {
+      const deckDueDates = [];
+      
+      state.todos.forEach(todo => {
+        if (!todo.linkedDecks || todo.completed || !todo.dueDate) return;
+        
+        todo.linkedDecks.forEach(deckId => {
+          const deck = state.decks.find(d => d.id === deckId);
+          if (deck) {
+            deckDueDates.push({
+              deck,
+              dueDate: todo.dueDate,
+              todoTitle: todo.title
+            });
+          }
+        });
+      });
+
+      // Sort by due date (soonest first)
+      deckDueDates.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+      
+      // Remove duplicates (keep earliest due date)
+      const seen = new Set();
+      return deckDueDates.filter(item => {
+        if (seen.has(item.deck.id)) return false;
+        seen.add(item.deck.id);
+        return true;
+      });
+    }
+
+    function getCardCount(deckId) {
+      return state.cards.filter(c => c.deckId === deckId).length;
+    }
+
+    function getSubfolderCount(folderPath) {
+      return state.folders.filter(f => f.parentPath === folderPath).length;
+    }
+
+    function getDeckCountInFolder(folderPath) {
+      const folder = state.folders.find(f => f.path === folderPath);
+      return state.decks.filter(d => {
+        if (d.folderPath === folderPath) return true;
+        if (folder && folder.tags && d.tags) {
+          return folder.tags.some(tag => d.tags.includes(tag));
+        }
+        return false;
+      }).length;
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '';
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+
+    function isOverdue(dateStr) {
+      return new Date(dateStr) < new Date();
+    }
+
+    // ============ NAVIGATION ============
+    function navigateBack(parentPath) {
+      if (parentPath) {
+        state.currentFolder = parentPath;
+        state.currentView = 'folder';
+      } else {
+        state.currentFolder = null;
+        state.currentView = 'flashcards';
+      }
+      render();
+    }
+
+    function openFolder(path) {
+      state.currentFolder = path;
+      state.currentView = 'folder';
+      render();
+    }
+
+    function openDeck(deckId) {
+      state.studySession = {
+        deckId,
+        cards: [],
+        currentIndex: 0,
+        totalCards: 0,
+        correct: 0,
+        wrong: 0,
+        wrongCards: []
+      };
+      state.currentView = 'study-setup';
+      render();
+    }
+
+    function openDeckFromTodo(deckId) {
+      openDeck(deckId);
+    }
+
+    function cancelStudy() {
+      state.studySession = null;
+      state.currentView = 'flashcards';
+      render();
+    }
+
+    function showAddTodo() {
+      state.currentView = 'add-todo';
+      render();
+    }
+
+    // ============ STUDY FUNCTIONS ============
+    function startStudy() {
+      const deckCards = state.cards.filter(c => c.deckId === state.studySession.deckId);
+      const orderedCards = getWeightedCards(deckCards, state.settings.shuffle);
+      
+      state.studySession.cards = orderedCards;
+      state.studySession.totalCards = orderedCards.length;
+      state.studySession.currentIndex = 0;
+      state.studySession.correct = 0;
+      state.studySession.wrong = 0;
+      state.studySession.wrongCards = [];
+      state.currentView = 'study';
+      render();
+    }
+
+    function flipCard() {
+      const inner = document.getElementById('flashcard-inner');
+      if (inner) {
+        inner.classList.toggle('flipped');
+      }
+    }
+
+    async function markCard(correct) {
+      const session = state.studySession;
+      const card = session.cards[session.currentIndex];
+
+      if (correct) {
+        session.correct++;
+        // Reset wrong count on correct answer
+        card.wrongCount = 0;
+      } else {
+        session.wrong++;
+        session.wrongCards.push(card);
+        card.wrongCount = (card.wrongCount || 0) + 1;
+      }
+
+      // Update card stats in background
+      apiCall('updateCardStats', {
+        id: card.id,
+        wrongCount: card.wrongCount,
+        lastStudied: new Date().toISOString()
+      }).catch(console.error);
+
+      // Move to next card
+      session.currentIndex++;
+      
+      if (session.currentIndex >= session.cards.length) {
+        saveToLocal();
+      }
+      
+      render();
+    }
+
+    function retryWrongCards() {
+      const session = state.studySession;
+      session.cards = state.settings.shuffle 
+        ? [...session.wrongCards].sort(() => Math.random() - 0.5)
+        : [...session.wrongCards];
+      session.totalCards = session.cards.length;
+      session.currentIndex = 0;
+      session.correct = 0;
+      session.wrong = 0;
+      session.wrongCards = [];
+      state.currentView = 'study';
+      render();
+    }
+
+    function restartDeck() {
+      startStudy();
+    }
+
+    // ============ TODO FUNCTIONS ============
+    let todoReminders = [];
+
+    function autoGenerateReminders() {
+      const dueInput = document.getElementById('todo-due');
+      if (!dueInput.value) {
+        alert('Please set a due date first');
+        return;
+      }
+
+      const dueDate = new Date(dueInput.value);
+      todoReminders = [1, 3, 7, 14]
+        .map(days => {
+          const date = new Date(dueDate);
+          date.setDate(date.getDate() - days);
+          return date.toISOString().split('T')[0];
+        })
+        .filter(date => new Date(date) >= new Date());
+
+      renderReminders();
+    }
+
+    function addManualReminder() {
+      const date = prompt('Enter reminder date (YYYY-MM-DD):');
+      if (date && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
+        todoReminders.push(date);
+        renderReminders();
+      }
+    }
+
+    function removeReminder(index) {
+      todoReminders.splice(index, 1);
+      renderReminders();
+    }
+
+    function renderReminders() {
+      const container = document.getElementById('reminders-container');
+      container.innerHTML = todoReminders.map((date, i) => `
+        <div class="reminder-chip">
+          ${formatDate(date)}
+          <button type="button" onclick="removeReminder(${i})">×</button>
+        </div>
+      `).join('');
+    }
+
+    async function saveTodo(event) {
+      event.preventDefault();
+      
+      const title = document.getElementById('todo-title').value;
+      const dueDate = document.getElementById('todo-due').value;
+      const decksSelect = document.getElementById('todo-decks');
+      const linkedDecks = Array.from(decksSelect.selectedOptions).map(o => o.value);
+
+      const todo = {
+        id: 'todo_' + Date.now(),
+        title,
+        dueDate,
+        reminders: todoReminders,
+        linkedDecks,
+        completed: false,
+        createdAt: new Date().toISOString()
+      };
+
+      // Add locally first
+      state.todos.push(todo);
+      state.todos.sort((a, b) => {
+        if (!a.dueDate) return 1;
+        if (!b.dueDate) return -1;
+        return new Date(a.dueDate) - new Date(b.dueDate);
+      });
+      saveToLocal();
+
+      // Sync to server
+      try {
+        await apiCall('addTodo', {
+          ...todo,
+          reminders: JSON.stringify(todo.reminders),
+          linkedDecks: JSON.stringify(todo.linkedDecks)
+        });
+      } catch (error) {
+        console.error('Failed to sync todo:', error);
+      }
+
+      todoReminders = [];
+      scheduleReminders();
+      state.currentView = 'todos';
+      render();
+    }
+
+    async function completeTodo(id) {
+      const todo = state.todos.find(t => t.id === id);
+      if (todo) {
+        todo.completed = true;
+        saveToLocal();
+        render();
+
+        try {
+          await apiCall('completeTodo', { id });
+        } catch (error) {
+          console.error('Failed to sync todo completion:', error);
+        }
+      }
+    }
+
+    async function deleteTodo(id) {
+      if (!confirm('Delete this todo?')) return;
+      
+      state.todos = state.todos.filter(t => t.id !== id);
+      saveToLocal();
+      render();
+
+      try {
+        await apiCall('deleteTodo', { id });
+      } catch (error) {
+        console.error('Failed to sync todo deletion:', error);
+      }
+    }
+
+    // ============ EVENT LISTENERS ============
+    function attachEventListeners() {
+      // Folder clicks
+      document.querySelectorAll('[data-folder-path]').forEach(el => {
+        el.addEventListener('click', () => openFolder(el.dataset.folderPath));
+      });
+
+      // Deck clicks
+      document.querySelectorAll('[data-deck-id]').forEach(el => {
+        el.addEventListener('click', () => openDeck(el.dataset.deckId));
+      });
+
+      // Toggle buttons
+      document.querySelectorAll('[data-toggle]').forEach(el => {
+        el.addEventListener('click', () => {
+          const setting = el.dataset.toggle;
+          state.settings[setting] = !state.settings[setting];
+          saveToLocal();
+          render();
+        });
+      });
+
+      // Flashcard click to flip
+      const flashcard = document.getElementById('flashcard');
+      if (flashcard) {
+        flashcard.addEventListener('click', flipCard);
+
+        // Touch swipe
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        flashcard.addEventListener('touchstart', (e) => {
+          touchStartX = e.touches[0].clientX;
+          touchStartY = e.touches[0].clientY;
+        });
+
+        flashcard.addEventListener('touchend', (e) => {
+          const touchEndX = e.changedTouches[0].clientX;
+          const touchEndY = e.changedTouches[0].clientY;
+          const deltaX = touchEndX - touchStartX;
+          const deltaY = touchEndY - touchStartY;
+
+          if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) {
+            if (deltaX > 0) {
+              markCard(true); // Swipe right = correct
+            } else {
+              markCard(false); // Swipe left = wrong
+            }
+          }
+        });
+      }
+    }
+
+    // KEYBOARD CONTROLS
+    let keyHoldTimer = null;
+
+    document.addEventListener('keydown', (e) => {
+      if (state.currentView !== 'study') return;
+      if (e.repeat) return;
+
+      switch (e.key) {
+        case 'ArrowUp':
+        case 'ArrowDown':
+          e.preventDefault();
+          flipCard();
+          break;
+        case 'ArrowRight':
+          e.preventDefault();
+          markCard(true);
+          break;
+        case 'ArrowLeft':
+          e.preventDefault();
+          // Start timer for long press
+          keyHoldTimer = setTimeout(() => {
+            // Go back (if not at first card)
+            if (state.studySession.currentIndex > 0) {
+              state.studySession.currentIndex--;
+              render();
+            }
+            keyHoldTimer = null;
+          }, 1000);
+          break;
+      }
+    });
+
+    document.addEventListener('keyup', (e) => {
+      if (e.key === 'ArrowLeft' && keyHoldTimer) {
+        clearTimeout(keyHoldTimer);
+        keyHoldTimer = null;
+        markCard(false);
+      }
+    });
+
+    // Navigation
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const view = item.dataset.view;
+        state.currentView = view;
+        state.currentFolder = null;
+        state.studySession = null;
+        
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        
+        render();
+      });
+    });
+
+    // ============ INITIALIZATION ============
+    async function init() {
+      // Load from local storage first (for offline)
+      const hasLocal = loadFromLocal();
+      
+      if (hasLocal) {
+        document.getElementById('loading-screen').classList.add('hidden');
+        render();
+      }
+
+      // Request notification permission
+      await requestNotificationPermission();
+
+      // Sync from server
+      const synced = await syncData();
+      
+      if (!hasLocal && !synced) {
+        document.getElementById('app').innerHTML = `
+          <div class="empty-state" style="padding-top: 100px;">
+            <h3>Connection Error</h3>
+            <p>Could not connect to Google Sheets.</p>
+            <p style="margin-top: 16px;">Check your Apps Script URL in the code.</p>
+            <button class="btn btn-primary" style="margin-top: 24px;" onclick="location.reload()">
+              Retry
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      render();
+      scheduleReminders();
+
+      // Register service worker
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').catch(console.error);
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
