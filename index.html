@@ -517,6 +517,31 @@
       background: rgba(74, 222, 128, 0.3);
     }
 
+    .study-btn.back {
+      background: rgba(160, 160, 160, 0.2);
+      color: var(--text-secondary);
+      width: 60px;
+      height: 60px;
+    }
+
+    .study-btn.back:hover {
+      background: rgba(160, 160, 160, 0.3);
+    }
+
+    .study-btn.back:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .study-container.no-scroll {
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    body.studying {
+      overflow: hidden;
+    }
+
     .study-options {
       display: flex;
       gap: 12px;
@@ -1099,6 +1124,13 @@
     function render() {
       const app = document.getElementById('app');
       
+      // Toggle body class for study view (disable scrolling)
+      if (state.currentView === 'study') {
+        document.body.classList.add('studying');
+      } else {
+        document.body.classList.remove('studying');
+      }
+      
       switch (state.currentView) {
         case 'flashcards':
           app.innerHTML = renderFlashcardsView();
@@ -1327,8 +1359,8 @@
               <button class="toggle-btn ${state.settings.shuffle ? 'active' : ''}" data-toggle="shuffle">
                 Shuffle ${state.settings.shuffle ? '✓' : ''}
               </button>
-              <button class="toggle-btn ${state.settings.reverse ? 'active' : ''}" data-toggle="reverse">
-                Reverse ${state.settings.reverse ? '✓' : ''}
+              <button class="toggle-btn active" onclick="toggleFrontSide()">
+                Front: ${state.settings.reverse ? 'Definition' : 'Term'}
               </button>
             </div>
             
@@ -1387,13 +1419,18 @@
           </div>
 
           <div class="study-actions">
-            <button class="study-btn wrong" onclick="markCard(false)" title="Wrong (←)">
+            <button class="study-btn wrong" onclick="markCard(false)" title="Wrong">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                 <line x1="18" y1="6" x2="6" y2="18"/>
                 <line x1="6" y1="6" x2="18" y2="18"/>
               </svg>
             </button>
-            <button class="study-btn correct" onclick="markCard(true)" title="Correct (→)">
+            <button class="study-btn back" onclick="goBackCard()" title="Back" ${!session.history || session.history.length === 0 ? 'disabled' : ''}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+            </button>
+            <button class="study-btn correct" onclick="markCard(true)" title="Correct">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                 <polyline points="20 6 9 17 4 12"/>
               </svg>
@@ -1906,6 +1943,14 @@
       const session = state.studySession;
       const card = session.cards[session.currentIndex];
 
+      // Save history for undo
+      if (!session.history) session.history = [];
+      session.history.push({
+        index: session.currentIndex,
+        correct: correct,
+        prevWrongCount: card.wrongCount || 0
+      });
+
       if (correct) {
         session.correct++;
         // Reset wrong count on correct answer
@@ -1930,6 +1975,32 @@
         saveToLocal();
       }
       
+      render();
+    }
+
+    function goBackCard() {
+      const session = state.studySession;
+      if (!session.history || session.history.length === 0) return;
+
+      const lastAction = session.history.pop();
+      const card = session.cards[lastAction.index];
+
+      // Undo the score change
+      if (lastAction.correct) {
+        session.correct--;
+      } else {
+        session.wrong--;
+        // Remove card from wrongCards
+        const idx = session.wrongCards.findIndex(c => c.id === card.id);
+        if (idx !== -1) session.wrongCards.splice(idx, 1);
+      }
+
+      // Restore wrong count
+      card.wrongCount = lastAction.prevWrongCount;
+
+      // Go back to previous card
+      session.currentIndex = lastAction.index;
+
       render();
     }
 
@@ -2507,34 +2578,16 @@
         });
       });
 
+    function toggleFrontSide() {
+      state.settings.reverse = !state.settings.reverse;
+      saveToLocal();
+      render();
+    }
+
       // Flashcard click to flip
       const flashcard = document.getElementById('flashcard');
       if (flashcard) {
         flashcard.addEventListener('click', flipCard);
-
-        // Touch swipe
-        let touchStartX = 0;
-        let touchStartY = 0;
-
-        flashcard.addEventListener('touchstart', (e) => {
-          touchStartX = e.touches[0].clientX;
-          touchStartY = e.touches[0].clientY;
-        });
-
-        flashcard.addEventListener('touchend', (e) => {
-          const touchEndX = e.changedTouches[0].clientX;
-          const touchEndY = e.changedTouches[0].clientY;
-          const deltaX = touchEndX - touchStartX;
-          const deltaY = touchEndY - touchStartY;
-
-          if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) {
-            if (deltaX > 0) {
-              markCard(true); // Swipe right = correct
-            } else {
-              markCard(false); // Swipe left = wrong
-            }
-          }
-        });
       }
     }
 
