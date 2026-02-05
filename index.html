@@ -520,8 +520,6 @@
     .study-btn.back {
       background: rgba(160, 160, 160, 0.2);
       color: var(--text-secondary);
-      width: 60px;
-      height: 60px;
     }
 
     .study-btn.back:hover {
@@ -1419,15 +1417,15 @@
           </div>
 
           <div class="study-actions">
+            <button class="study-btn back" onclick="goBackCard()" title="Back" ${!session.history || session.history.length === 0 ? 'disabled' : ''}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+            </button>
             <button class="study-btn wrong" onclick="markCard(false)" title="Wrong">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                 <line x1="18" y1="6" x2="6" y2="18"/>
                 <line x1="6" y1="6" x2="18" y2="18"/>
-              </svg>
-            </button>
-            <button class="study-btn back" onclick="goBackCard()" title="Back" ${!session.history || session.history.length === 0 ? 'disabled' : ''}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                <polyline points="15 18 9 12 15 6"/>
               </svg>
             </button>
             <button class="study-btn correct" onclick="markCard(true)" title="Correct">
@@ -2578,17 +2576,17 @@
         });
       });
 
-    function toggleFrontSide() {
-      state.settings.reverse = !state.settings.reverse;
-      saveToLocal();
-      render();
-    }
-
       // Flashcard click to flip
       const flashcard = document.getElementById('flashcard');
       if (flashcard) {
         flashcard.addEventListener('click', flipCard);
       }
+    }
+
+    function toggleFrontSide() {
+      state.settings.reverse = !state.settings.reverse;
+      saveToLocal();
+      render();
     }
 
     // KEYBOARD CONTROLS
