@@ -411,7 +411,7 @@
       width: 100%;
       height: 100%;
       position: relative;
-      transition: none;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       transform-style: preserve-3d;
     }
 
@@ -529,6 +529,91 @@
     .study-btn.back:disabled {
       opacity: 0.3;
       cursor: not-allowed;
+    }
+
+    /* ============ SWIPE ANIMATION ============ */
+    .flashcard-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .flashcard {
+      touch-action: none;
+      user-select: none;
+      will-change: transform;
+      transition: none;
+    }
+
+    .flashcard.swiping {
+      transition: none;
+    }
+
+    .flashcard.animate-out {
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+    }
+
+    .flashcard.animate-enter {
+      animation: cardEnter 0.35s cubic-bezier(0.2, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes cardEnter {
+      0% {
+        opacity: 0;
+        transform: scale(0.92) translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .swipe-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.1s ease;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .swipe-overlay-correct {
+      background: rgba(74, 222, 128, 0.15);
+      border: 3px solid var(--success);
+      border-radius: var(--radius);
+    }
+
+    .swipe-overlay-wrong {
+      background: rgba(248, 113, 113, 0.15);
+      border: 3px solid var(--error);
+      border-radius: var(--radius);
+    }
+
+    .swipe-overlay-label {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 8px 20px;
+      border-radius: 8px;
+      transform: rotate(-20deg);
+    }
+
+    .swipe-overlay-correct .swipe-overlay-label {
+      color: var(--success);
+      border: 3px solid var(--success);
+    }
+
+    .swipe-overlay-wrong .swipe-overlay-label {
+      color: var(--error);
+      border: 3px solid var(--error);
     }
 
     .study-container.no-scroll {
@@ -1401,17 +1486,25 @@
             </div>
           </div>
 
-          <div class="flashcard" id="flashcard">
-            <div class="flashcard-inner" id="flashcard-inner">
-              <div class="flashcard-face flashcard-front">
-                <span class="flashcard-label">${state.settings.reverse ? 'Definition' : 'Term'}</span>
-                <h2>${front}</h2>
-                ${frontImage ? `<img src="${frontImage}" alt=""/>` : ''}
+          <div class="flashcard-wrapper">
+            <div class="flashcard" id="flashcard">
+              <div class="swipe-overlay swipe-overlay-correct" id="swipe-overlay-correct">
+                <span class="swipe-overlay-label">✓ Know</span>
               </div>
-              <div class="flashcard-face flashcard-back">
-                <span class="flashcard-label">${state.settings.reverse ? 'Term' : 'Definition'}</span>
-                <h2>${back}</h2>
-                ${backImage ? `<img src="${backImage}" alt=""/>` : ''}
+              <div class="swipe-overlay swipe-overlay-wrong" id="swipe-overlay-wrong">
+                <span class="swipe-overlay-label">✗ Again</span>
+              </div>
+              <div class="flashcard-inner" id="flashcard-inner">
+                <div class="flashcard-face flashcard-front">
+                  <span class="flashcard-label">${state.settings.reverse ? 'Definition' : 'Term'}</span>
+                  <h2>${front}</h2>
+                  ${frontImage ? `<img src="${frontImage}" alt=""/>` : ''}
+                </div>
+                <div class="flashcard-face flashcard-back">
+                  <span class="flashcard-label">${state.settings.reverse ? 'Term' : 'Definition'}</span>
+                  <h2>${back}</h2>
+                  ${backImage ? `<img src="${backImage}" alt=""/>` : ''}
+                </div>
               </div>
             </div>
           </div>
@@ -1932,16 +2025,193 @@
 
     function flipCard() {
       const inner = document.getElementById('flashcard-inner');
-      if (inner) {
+      if (inner && !swipeState.isSwiping) {
         inner.classList.toggle('flipped');
       }
     }
 
-    async function markCard(correct) {
+    // ============ SWIPE GESTURE SYSTEM ============
+    const swipeState = {
+      startX: 0,
+      startY: 0,
+      currentX: 0,
+      isDragging: false,
+      isSwiping: false,
+      isAnimating: false,
+      threshold: 100,
+      maxRotation: 15
+    };
+
+    function initSwipeHandlers() {
+      const flashcard = document.getElementById('flashcard');
+      if (!flashcard) return;
+
+      // Pointer events for unified touch/mouse handling
+      flashcard.addEventListener('pointerdown', onSwipeStart, { passive: false });
+      
+      // Remove previous document-level listeners before re-adding
+      document.removeEventListener('pointermove', onSwipeMove);
+      document.removeEventListener('pointerup', onSwipeEnd);
+      document.removeEventListener('pointercancel', onSwipeEnd);
+      document.addEventListener('pointermove', onSwipeMove, { passive: false });
+      document.addEventListener('pointerup', onSwipeEnd);
+      document.addEventListener('pointercancel', onSwipeEnd);
+    }
+
+    function onSwipeStart(e) {
+      if (swipeState.isAnimating) return;
+      swipeState.startX = e.clientX;
+      swipeState.startY = e.clientY;
+      swipeState.currentX = 0;
+      swipeState.isDragging = true;
+      swipeState.isSwiping = false;
+
+      const flashcard = document.getElementById('flashcard');
+      if (flashcard) {
+        flashcard.classList.add('swiping');
+        flashcard.setPointerCapture(e.pointerId);
+      }
+    }
+
+    function onSwipeMove(e) {
+      if (!swipeState.isDragging || swipeState.isAnimating) return;
+      
+      const dx = e.clientX - swipeState.startX;
+      const dy = e.clientY - swipeState.startY;
+
+      // If vertical movement dominates early on, don't swipe (allow flip)
+      if (!swipeState.isSwiping && Math.abs(dy) > Math.abs(dx) && Math.abs(dx) < 10) {
+        return;
+      }
+
+      // Once horizontal movement starts, commit to swiping
+      if (Math.abs(dx) > 10) {
+        swipeState.isSwiping = true;
+      }
+
+      if (!swipeState.isSwiping) return;
+
+      e.preventDefault();
+      swipeState.currentX = dx;
+
+      const flashcard = document.getElementById('flashcard');
+      const correctOverlay = document.getElementById('swipe-overlay-correct');
+      const wrongOverlay = document.getElementById('swipe-overlay-wrong');
+
+      if (!flashcard) return;
+
+      // Calculate rotation based on drag distance
+      const rotation = (dx / window.innerWidth) * swipeState.maxRotation;
+      const opacity = Math.min(Math.abs(dx) / swipeState.threshold, 1);
+
+      flashcard.style.transform = `translateX(${dx}px) rotate(${rotation}deg)`;
+
+      // Show overlays based on direction
+      if (correctOverlay && wrongOverlay) {
+        if (dx > 0) {
+          correctOverlay.style.opacity = opacity * 0.9;
+          wrongOverlay.style.opacity = 0;
+        } else if (dx < 0) {
+          wrongOverlay.style.opacity = opacity * 0.9;
+          correctOverlay.style.opacity = 0;
+        } else {
+          correctOverlay.style.opacity = 0;
+          wrongOverlay.style.opacity = 0;
+        }
+      }
+    }
+
+    function onSwipeEnd(e) {
+      if (!swipeState.isDragging) return;
+      swipeState.isDragging = false;
+
+      const flashcard = document.getElementById('flashcard');
+      if (!flashcard) return;
+
+      const dx = swipeState.currentX;
+
+      if (swipeState.isSwiping && Math.abs(dx) >= swipeState.threshold) {
+        // Swipe completed — animate off screen
+        const isCorrect = dx > 0;
+        animateCardOut(isCorrect);
+      } else if (swipeState.isSwiping) {
+        // Snap back
+        snapCardBack(flashcard);
+      } else {
+        // It was a tap — flip the card
+        flipCard();
+        flashcard.classList.remove('swiping');
+      }
+
+      swipeState.isSwiping = false;
+    }
+
+    function animateCardOut(isCorrect) {
+      swipeState.isAnimating = true;
+      const flashcard = document.getElementById('flashcard');
+      if (!flashcard) return;
+
+      const direction = isCorrect ? 1 : -1;
+      const flyX = direction * (window.innerWidth + 200);
+      const flyRotation = direction * 30;
+
+      flashcard.classList.remove('swiping');
+      flashcard.classList.add('animate-out');
+      flashcard.style.transform = `translateX(${flyX}px) rotate(${flyRotation}deg)`;
+      flashcard.style.opacity = '0';
+
+      setTimeout(() => {
+        swipeState.isAnimating = false;
+        markCardWithAnimation(isCorrect);
+      }, 350);
+    }
+
+    function snapCardBack(flashcard) {
+      flashcard.classList.remove('swiping');
+      flashcard.style.transition = 'transform 0.3s cubic-bezier(0.2, 0, 0.2, 1)';
+      flashcard.style.transform = 'translateX(0) rotate(0deg)';
+
+      const correctOverlay = document.getElementById('swipe-overlay-correct');
+      const wrongOverlay = document.getElementById('swipe-overlay-wrong');
+      if (correctOverlay) correctOverlay.style.opacity = 0;
+      if (wrongOverlay) wrongOverlay.style.opacity = 0;
+
+      setTimeout(() => {
+        flashcard.style.transition = '';
+      }, 300);
+    }
+
+    function animateButtonPress(isCorrect) {
+      if (swipeState.isAnimating) return;
+      swipeState.isAnimating = true;
+      
+      const flashcard = document.getElementById('flashcard');
+      const overlay = document.getElementById(isCorrect ? 'swipe-overlay-correct' : 'swipe-overlay-wrong');
+      if (!flashcard) return;
+
+      // Flash the overlay briefly
+      if (overlay) overlay.style.opacity = '0.9';
+
+      const direction = isCorrect ? 1 : -1;
+      const flyX = direction * (window.innerWidth + 200);
+      const flyRotation = direction * 25;
+
+      requestAnimationFrame(() => {
+        flashcard.classList.add('animate-out');
+        flashcard.style.transform = `translateX(${flyX}px) rotate(${flyRotation}deg)`;
+        flashcard.style.opacity = '0';
+      });
+
+      setTimeout(() => {
+        swipeState.isAnimating = false;
+        markCardWithAnimation(isCorrect);
+      }, 350);
+    }
+
+    function markCardWithAnimation(correct) {
       const session = state.studySession;
       const card = session.cards[session.currentIndex];
 
-      // Save history for undo
       if (!session.history) session.history = [];
       session.history.push({
         index: session.currentIndex,
@@ -1951,7 +2221,6 @@
 
       if (correct) {
         session.correct++;
-        // Reset wrong count on correct answer
         card.wrongCount = 0;
       } else {
         session.wrong++;
@@ -1959,14 +2228,12 @@
         card.wrongCount = (card.wrongCount || 0) + 1;
       }
 
-      // Update card stats in background
       apiCall('updateCardStats', {
         id: card.id,
         wrongCount: card.wrongCount,
         lastStudied: new Date().toISOString()
       }).catch(console.error);
 
-      // Move to next card
       session.currentIndex++;
       
       if (session.currentIndex >= session.cards.length) {
@@ -1974,6 +2241,21 @@
       }
       
       render();
+
+      // Animate the new card entering
+      requestAnimationFrame(() => {
+        const newCard = document.getElementById('flashcard');
+        if (newCard) {
+          newCard.classList.add('animate-enter');
+          newCard.addEventListener('animationend', () => {
+            newCard.classList.remove('animate-enter');
+          }, { once: true });
+        }
+      });
+    }
+    async function markCard(correct) {
+      // Use animation when called from buttons
+      animateButtonPress(correct);
     }
 
     function goBackCard() {
@@ -2576,10 +2858,9 @@
         });
       });
 
-      // Flashcard click to flip
-      const flashcard = document.getElementById('flashcard');
-      if (flashcard) {
-        flashcard.addEventListener('click', flipCard);
+      // Flashcard swipe/tap handling
+      if (document.getElementById('flashcard')) {
+        initSwipeHandlers();
       }
     }
 
@@ -2604,7 +2885,7 @@
           break;
         case 'ArrowRight':
           e.preventDefault();
-          markCard(true);
+          if (!swipeState.isAnimating) markCard(true);
           break;
         case 'ArrowLeft':
           e.preventDefault();
@@ -2625,7 +2906,7 @@
       if (e.key === 'ArrowLeft' && keyHoldTimer) {
         clearTimeout(keyHoldTimer);
         keyHoldTimer = null;
-        markCard(false);
+        if (!swipeState.isAnimating) markCard(false);
       }
     });
 
