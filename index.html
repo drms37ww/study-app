@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#0d0d0d">
+  <meta name="theme-color" content="#000000">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Study App</title>
   <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -550,17 +550,17 @@
     }
 
     .flashcard.animate-out {
-      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
     }
 
     .flashcard.animate-enter {
-      animation: cardEnter 0.35s cubic-bezier(0.2, 0, 0.2, 1) forwards;
+      animation: cardEnter 0.2s cubic-bezier(0.2, 0, 0.2, 1) forwards;
     }
 
     @keyframes cardEnter {
       0% {
         opacity: 0;
-        transform: scale(0.92) translateY(20px);
+        transform: scale(0.95) translateY(12px);
       }
       100% {
         opacity: 1;
@@ -594,26 +594,6 @@
       background: rgba(248, 113, 113, 0.15);
       border: 3px solid var(--error);
       border-radius: var(--radius);
-    }
-
-    .swipe-overlay-label {
-      font-size: 2rem;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      padding: 8px 20px;
-      border-radius: 8px;
-      transform: rotate(-20deg);
-    }
-
-    .swipe-overlay-correct .swipe-overlay-label {
-      color: var(--success);
-      border: 3px solid var(--success);
-    }
-
-    .swipe-overlay-wrong .swipe-overlay-label {
-      color: var(--error);
-      border: 3px solid var(--error);
     }
 
     .study-container.no-scroll {
@@ -650,77 +630,128 @@
       border-color: var(--accent);
     }
 
-    /* ============ TODO LIST ============ */
+    /* ============ TODO LIST (Google Tasks style) ============ */
+    .todo-list {
+      padding: 0;
+    }
+
     .todo-item {
       display: flex;
       align-items: flex-start;
-      gap: 12px;
-      padding: 16px;
-      background: var(--bg-card);
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      margin-bottom: 12px;
+      gap: 16px;
+      padding: 14px 4px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0;
+      background: none;
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
+      border-top: none;
+    }
+
+    .todo-item:last-child {
+      border-bottom: none;
     }
 
     .todo-checkbox {
-      width: 24px;
-      height: 24px;
-      border: 2px solid var(--border);
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--text-muted);
       border-radius: 50%;
       cursor: pointer;
-      transition: var(--transition);
+      transition: all 0.2s ease;
       flex-shrink: 0;
-      margin-top: 2px;
+      margin-top: 1px;
+      position: relative;
     }
 
     .todo-checkbox:hover {
       border-color: var(--accent);
+      background: rgba(74, 158, 255, 0.1);
+    }
+
+    .todo-checkbox:active {
+      transform: scale(0.9);
     }
 
     .todo-checkbox.checked {
-      background: var(--success);
-      border-color: var(--success);
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .todo-checkbox.checked::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 6px;
+      width: 5px;
+      height: 9px;
+      border: solid #000;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
     }
 
     .todo-content {
       flex: 1;
+      min-width: 0;
     }
 
     .todo-title {
-      font-size: 1rem;
-      font-weight: 500;
-      margin-bottom: 4px;
+      font-size: 0.975rem;
+      font-weight: 400;
+      color: var(--text-primary);
+      line-height: 1.4;
+      margin-bottom: 2px;
     }
 
-    .todo-meta {
-      font-size: 0.875rem;
+    .todo-details {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .todo-detail-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.75rem;
       color: var(--text-secondary);
+      line-height: 1;
     }
 
-    .todo-due {
-      color: var(--warning);
+    .todo-detail-chip svg {
+      width: 13px;
+      height: 13px;
+      flex-shrink: 0;
     }
 
-    .todo-due.overdue {
+    .todo-detail-chip.overdue {
       color: var(--error);
+    }
+
+    .todo-detail-chip.due-soon {
+      color: var(--warning);
     }
 
     .todo-decks {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 12px;
+      gap: 6px;
+      margin-top: 8px;
     }
 
     .todo-deck-link {
-      padding: 6px 12px;
+      padding: 4px 10px;
       background: var(--bg-tertiary);
-      border-radius: 16px;
-      font-size: 0.75rem;
+      border-radius: 14px;
+      font-size: 0.7rem;
       color: var(--accent);
       cursor: pointer;
       transition: var(--transition);
       border: none;
+      font-family: inherit;
     }
 
     .todo-deck-link:hover {
@@ -728,10 +759,81 @@
       color: #000;
     }
 
-    .todo-reminders {
-      margin-top: 8px;
-      font-size: 0.75rem;
+    .todo-delete-btn {
+      background: none;
+      border: none;
       color: var(--text-muted);
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 50%;
+      transition: var(--transition);
+      flex-shrink: 0;
+      opacity: 0.5;
+    }
+
+    .todo-delete-btn:hover {
+      opacity: 1;
+      background: rgba(248, 113, 113, 0.1);
+      color: var(--error);
+    }
+
+    .todo-delete-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* FAB for adding todos */
+    .fab {
+      position: fixed;
+      bottom: 84px;
+      right: 20px;
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(74, 158, 255, 0.3);
+      transition: all 0.2s ease;
+      z-index: 90;
+    }
+
+    .fab:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(74, 158, 255, 0.4);
+    }
+
+    .fab:active {
+      transform: scale(0.95);
+    }
+
+    .fab svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .todo-reminders {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .todo-reminder-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .todo-reminder-badge svg {
+      width: 11px;
+      height: 11px;
     }
 
     /* ============ MODALS ============ */
@@ -961,6 +1063,51 @@
       display: none !important;
     }
 
+    /* ============ EDGE SWIPE BACK ============ */
+    .edge-swipe-indicator {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 40px;
+      height: 100%;
+      z-index: 999;
+      pointer-events: none;
+    }
+
+    .edge-swipe-arrow {
+      position: fixed;
+      left: -30px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 30px;
+      height: 30px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.15s ease, left 0.15s ease;
+      z-index: 1000;
+      pointer-events: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    .edge-swipe-arrow svg {
+      width: 16px;
+      height: 16px;
+      color: #000;
+    }
+
+    .page-transition {
+      animation: slideIn 0.25s cubic-bezier(0.2, 0, 0.2, 1);
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
     /* ============ SECTION HEADER ============ */
     .section-header {
       display: flex;
@@ -1029,6 +1176,13 @@
     <span>Syncing...</span>
   </div>
 
+  <!-- Edge Swipe Back Indicator -->
+  <div class="edge-swipe-arrow" id="edge-swipe-arrow">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+      <polyline points="15 18 9 12 15 6"/>
+    </svg>
+  </div>
+
   <!-- Bottom Navigation -->
   <nav class="nav">
     <button class="nav-item active" data-view="flashcards">
@@ -1043,7 +1197,7 @@
         <path d="M9 11l3 3L22 4"/>
         <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
       </svg>
-      <span>Todos</span>
+      <span>Tasks</span>
     </button>
   </nav>
 
@@ -1166,7 +1320,7 @@
             setTimeout(() => {
               new Notification('Study Reminder', {
                 body: todo.title,
-                icon: 'icons/icon-192.png',
+                icon: 'icon-192.png',
                 tag: todo.id + reminderDateTime,
                 silent: true
               });
@@ -1488,12 +1642,8 @@
 
           <div class="flashcard-wrapper">
             <div class="flashcard" id="flashcard">
-              <div class="swipe-overlay swipe-overlay-correct" id="swipe-overlay-correct">
-                <span class="swipe-overlay-label">✓ Know</span>
-              </div>
-              <div class="swipe-overlay swipe-overlay-wrong" id="swipe-overlay-wrong">
-                <span class="swipe-overlay-label">✗ Again</span>
-              </div>
+              <div class="swipe-overlay swipe-overlay-correct" id="swipe-overlay-correct"></div>
+              <div class="swipe-overlay swipe-overlay-wrong" id="swipe-overlay-wrong"></div>
               <div class="flashcard-inner" id="flashcard-inner">
                 <div class="flashcard-face flashcard-front">
                   <span class="flashcard-label">${state.settings.reverse ? 'Definition' : 'Term'}</span>
@@ -1575,62 +1725,74 @@
 
       return `
         <div class="header">
-          <h1>Todos</h1>
-          <button class="btn-icon" onclick="showAddTodo()">
+          <h1>Tasks</h1>
+          <button class="btn-icon" onclick="syncData().then(render)">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="12" y1="5" x2="12" y2="19"/>
-              <line x1="5" y1="12" x2="19" y2="12"/>
+              <path d="M23 4v6h-6M1 20v-6h6"/>
+              <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
             </svg>
           </button>
         </div>
         <div class="container">
-          ${activeTodos.length > 0 ? activeTodos.map(todo => `
-            <div class="todo-item" data-todo-id="${todo.id}">
-              <div class="todo-checkbox" onclick="completeTodo('${todo.id}')"></div>
-              <div class="todo-content">
-                <div class="todo-title">${todo.title}</div>
-                ${todo.dueDate ? `
-                  <div class="todo-meta">
-                    <span class="todo-due ${isOverdue(todo.dueDate) ? 'overdue' : ''}">
-                      Due: ${formatDate(todo.dueDate)}
-                    </span>
+          ${activeTodos.length > 0 ? `
+            <div class="todo-list">
+              ${activeTodos.map(todo => `
+                <div class="todo-item">
+                  <div class="todo-checkbox" onclick="completeTodo('${todo.id}')"></div>
+                  <div class="todo-content">
+                    <div class="todo-title">${todo.title}</div>
+                    <div class="todo-details">
+                      ${todo.dueDate ? `
+                        <span class="todo-detail-chip ${isOverdue(todo.dueDate) ? 'overdue' : ''}">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                          ${formatDate(todo.dueDate)}
+                        </span>
+                      ` : ''}
+                      ${todo.reminders && todo.reminders.length > 0 ? `
+                        <span class="todo-detail-chip">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+                          ${todo.reminders.length}
+                        </span>
+                      ` : ''}
+                    </div>
+                    ${todo.linkedDecks && todo.linkedDecks.length > 0 ? `
+                      <div class="todo-decks">
+                        ${todo.linkedDecks.map(deckId => {
+                          const deck = state.decks.find(d => d.id === deckId);
+                          return deck ? `
+                            <button class="todo-deck-link" onclick="event.stopPropagation(); openDeckFromTodo('${deckId}')">
+                              ${deck.name}
+                            </button>
+                          ` : '';
+                        }).join('')}
+                      </div>
+                    ` : ''}
                   </div>
-                ` : ''}
-                ${todo.linkedDecks && todo.linkedDecks.length > 0 ? `
-                  <div class="todo-decks">
-                    ${todo.linkedDecks.map(deckId => {
-                      const deck = state.decks.find(d => d.id === deckId);
-                      return deck ? `
-                        <button class="todo-deck-link" onclick="event.stopPropagation(); openDeckFromTodo('${deckId}')">
-                          📚 ${deck.name}
-                        </button>
-                      ` : '';
-                    }).join('')}
-                  </div>
-                ` : ''}
-                ${todo.reminders && todo.reminders.length > 0 ? `
-                  <div class="todo-reminders">
-                    🔔 ${todo.reminders.length} reminder${todo.reminders.length > 1 ? 's' : ''}
-                  </div>
-                ` : ''}
-              </div>
-              <button class="btn-icon" onclick="event.stopPropagation(); deleteTodo('${todo.id}')" style="color: var(--text-muted);">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;">
-                  <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
-                </svg>
-              </button>
+                  <button class="todo-delete-btn" onclick="event.stopPropagation(); deleteTodo('${todo.id}')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+                    </svg>
+                  </button>
+                </div>
+              `).join('')}
             </div>
-          `).join('') : `
+          ` : `
             <div class="empty-state">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M9 11l3 3L22 4"/>
                 <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
               </svg>
-              <h3>No todos</h3>
-              <p>Add a todo to get started</p>
+              <h3>No tasks yet</h3>
+              <p>Tap + to get started</p>
             </div>
           `}
         </div>
+        <button class="fab" onclick="showAddTodo()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+        </button>
       `;
     }
 
@@ -1638,14 +1800,14 @@
       return `
         <div class="header">
           <button class="header-back" onclick="state.currentView = 'todos'; render();">← Cancel</button>
-          <h1>Add Todo</h1>
+          <h1>New Task</h1>
           <div></div>
         </div>
         <div class="container">
           <form id="todo-form" onsubmit="saveTodo(event)">
             <div class="form-group">
               <label class="form-label">Title *</label>
-              <input type="text" class="form-input" id="todo-title" required placeholder="What do you need to study?">
+              <input type="text" class="form-input" id="todo-title" required placeholder="What do you need to do?">
             </div>
             
             <div class="form-group">
@@ -1655,31 +1817,33 @@
             
             <div class="form-group">
               <label class="form-label">Link Decks</label>
-              <select class="form-input" id="todo-decks" multiple style="height: auto; min-height: 100px;">
+              <select class="form-input" id="todo-decks" multiple style="height: auto; min-height: 80px;">
                 ${state.decks.map(deck => `
                   <option value="${deck.id}">${deck.name}</option>
                 `).join('')}
               </select>
-              <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Hold Ctrl/Cmd to select multiple</p>
+              <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;">Hold to select multiple</p>
             </div>
             
             <div class="form-group">
               <label class="form-label">Reminders</label>
               <div id="reminders-container" class="reminder-chips"></div>
               
-              <div class="reminder-add-section" style="margin-top: 12px;">
+              <div style="margin-top: 12px;">
                 <div style="display: flex; gap: 8px; margin-bottom: 8px;">
                   <input type="date" class="form-input" id="reminder-date" style="flex: 1;">
-                  <input type="time" class="form-input" id="reminder-time" value="09:00" style="width: 120px;">
-                  <button type="button" class="btn btn-secondary" style="padding: 8px 12px;" onclick="addReminderFromInputs()">+</button>
+                  <input type="time" class="form-input" id="reminder-time" value="09:00" style="width: 110px;">
+                  <button type="button" class="btn btn-secondary" style="padding: 8px 14px;" onclick="addReminderFromInputs()">+</button>
                 </div>
                 
-                <button type="button" class="btn btn-secondary" style="width: 100%; font-size: 0.875rem; padding: 8px;" onclick="autoGenerateReminders()">1-3-7-14</button>
+                <button type="button" class="btn btn-secondary" style="width: 100%; font-size: 0.8rem; padding: 8px;" onclick="autoGenerateReminders()">
+                  Auto-generate (1-3-7-14 days before)
+                </button>
               </div>
             </div>
             
             <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 24px;">
-              Save Todo
+              Save Task
             </button>
           </form>
         </div>
@@ -2163,7 +2327,7 @@
       setTimeout(() => {
         swipeState.isAnimating = false;
         markCardWithAnimation(isCorrect);
-      }, 350);
+      }, 250);
     }
 
     function snapCardBack(flashcard) {
@@ -2205,7 +2369,7 @@
       setTimeout(() => {
         swipeState.isAnimating = false;
         markCardWithAnimation(isCorrect);
-      }, 350);
+      }, 250);
     }
 
     function markCardWithAnimation(correct) {
@@ -2924,6 +3088,146 @@
         render();
       });
     });
+
+    // ============ NAVIGATION HISTORY & EDGE SWIPE ============
+    const navHistory = [];
+    
+    function pushNavState() {
+      navHistory.push({
+        view: state.currentView,
+        folder: state.currentFolder,
+        deck: state.currentDeck,
+        editingCard: state.editingCard,
+        editingParentFolder: state.editingParentFolder,
+        studySession: state.studySession ? { ...state.studySession } : null
+      });
+    }
+
+    function canGoBack() {
+      // Don't allow edge swipe during study
+      if (state.currentView === 'study') return false;
+      // These views have a back destination
+      const backableViews = ['folder', 'deck-detail', 'add-card', 'edit-card', 'add-todo', 'add-folder', 'add-deck', 'study-setup', 'study-complete'];
+      // Also allow going back from study-setup
+      return backableViews.includes(state.currentView) || navHistory.length > 0;
+    }
+
+    function performBack() {
+      if (!canGoBack()) return;
+      
+      switch (state.currentView) {
+        case 'folder': {
+          const folder = state.folders.find(f => f.path === state.currentFolder);
+          const parentPath = folder?.parentPath || null;
+          navigateBack(parentPath || '');
+          break;
+        }
+        case 'deck-detail':
+          goBackFromDeck();
+          break;
+        case 'add-card':
+        case 'edit-card':
+          state.editingCard = null;
+          state.currentView = 'deck-detail';
+          render();
+          break;
+        case 'add-todo':
+          state.currentView = 'todos';
+          render();
+          break;
+        case 'add-folder':
+          cancelAddFolder();
+          break;
+        case 'add-deck':
+          cancelAddDeck();
+          break;
+        case 'study-setup':
+          cancelStudy();
+          break;
+        default:
+          // Try nav history
+          if (navHistory.length > 0) {
+            const prev = navHistory.pop();
+            state.currentView = prev.view;
+            state.currentFolder = prev.folder;
+            state.currentDeck = prev.deck;
+            state.editingCard = prev.editingCard;
+            state.editingParentFolder = prev.editingParentFolder;
+            render();
+          }
+          break;
+      }
+    }
+
+    // Edge swipe detection
+    const edgeSwipe = {
+      startX: 0,
+      startY: 0,
+      currentX: 0,
+      active: false,
+      edgeZone: 25,
+      threshold: 80
+    };
+
+    document.addEventListener('touchstart', (e) => {
+      const touch = e.touches[0];
+      if (touch.clientX <= edgeSwipe.edgeZone && canGoBack()) {
+        edgeSwipe.startX = touch.clientX;
+        edgeSwipe.startY = touch.clientY;
+        edgeSwipe.active = true;
+        edgeSwipe.currentX = 0;
+      }
+    }, { passive: true });
+
+    document.addEventListener('touchmove', (e) => {
+      if (!edgeSwipe.active) return;
+      
+      const touch = e.touches[0];
+      const dx = touch.clientX - edgeSwipe.startX;
+      const dy = Math.abs(touch.clientY - edgeSwipe.startY);
+      
+      // Cancel if vertical movement is too large
+      if (dy > 50 && dx < 30) {
+        edgeSwipe.active = false;
+        const arrow = document.getElementById('edge-swipe-arrow');
+        if (arrow) { arrow.style.opacity = '0'; arrow.style.left = '-30px'; }
+        return;
+      }
+
+      if (dx > 10) {
+        edgeSwipe.currentX = dx;
+        const arrow = document.getElementById('edge-swipe-arrow');
+        if (arrow) {
+          const progress = Math.min(dx / edgeSwipe.threshold, 1);
+          arrow.style.opacity = String(progress);
+          arrow.style.left = Math.min(dx - 15, 20) + 'px';
+          arrow.style.background = progress >= 1 ? 'var(--accent)' : 'var(--bg-tertiary)';
+        }
+      }
+    }, { passive: true });
+
+    document.addEventListener('touchend', () => {
+      if (!edgeSwipe.active) return;
+      edgeSwipe.active = false;
+
+      const arrow = document.getElementById('edge-swipe-arrow');
+      if (arrow) {
+        arrow.style.opacity = '0';
+        arrow.style.left = '-30px';
+      }
+
+      if (edgeSwipe.currentX >= edgeSwipe.threshold) {
+        performBack();
+        // Add slide-in animation to new view
+        requestAnimationFrame(() => {
+          const app = document.getElementById('app');
+          if (app) {
+            app.classList.add('page-transition');
+            app.addEventListener('animationend', () => app.classList.remove('page-transition'), { once: true });
+          }
+        });
+      }
+    }, { passive: true });
 
     // ============ INITIALIZATION ============
     async function init() {
