@@ -42,6 +42,16 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    input, textarea, select,
+    input[type="text"], input[type="date"], input[type="time"], input[type="number"] {
+      user-select: text;
+      -webkit-user-select: text;
+      -webkit-touch-callout: default;
     }
 
     body {
@@ -1015,6 +1025,150 @@
       color: var(--text-secondary);
     }
 
+    /* Deck picker (folder navigation) */
+    .deck-picker {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--bg-tertiary);
+      max-height: 240px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .deck-picker-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 10px 12px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: var(--bg-tertiary);
+      z-index: 1;
+    }
+
+    .deck-picker-breadcrumb button {
+      background: none;
+      border: none;
+      color: var(--accent);
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-family: inherit;
+      padding: 0;
+    }
+
+    .deck-picker-breadcrumb span {
+      color: var(--text-muted);
+    }
+
+    .deck-picker-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: background 0.15s;
+      border-bottom: 1px solid rgba(51,51,51,0.5);
+    }
+
+    .deck-picker-item:last-child {
+      border-bottom: none;
+    }
+
+    .deck-picker-item:active {
+      background: rgba(74, 158, 255, 0.08);
+    }
+
+    .deck-picker-item svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      color: var(--text-muted);
+    }
+
+    .deck-picker-item.is-folder svg {
+      color: var(--warning);
+    }
+
+    .deck-picker-item .dp-name {
+      flex: 1;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+    }
+
+    .deck-picker-item .dp-meta {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .deck-picker-item .dp-arrow {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    .deck-picker-item .dp-check {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .deck-picker-item .dp-check.checked {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .deck-picker-item .dp-check.checked::after {
+      content: '';
+      width: 5px;
+      height: 9px;
+      border: solid #000;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+      margin-top: -2px;
+    }
+
+    .selected-decks-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .selected-deck-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      background: rgba(74, 158, 255, 0.12);
+      border: 1px solid rgba(74, 158, 255, 0.25);
+      border-radius: 14px;
+      font-size: 0.72rem;
+      color: var(--accent);
+    }
+
+    .selected-deck-chip button {
+      background: none;
+      border: none;
+      color: var(--accent);
+      cursor: pointer;
+      font-size: 0.85rem;
+      padding: 0;
+      line-height: 1;
+      font-family: inherit;
+    }
+
+    .selected-deck-chip button:hover {
+      color: var(--error);
+    }
+
     /* ============ MODALS ============ */
     .modal-overlay {
       position: fixed;
@@ -1598,12 +1752,6 @@
         <div class="header">
           <h1>Flashcards</h1>
           <div class="header-actions">
-            <button class="btn-icon" onclick="showAddFolder()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19"/>
-                <line x1="5" y1="12" x2="19" y2="12"/>
-              </svg>
-            </button>
             <button class="btn-icon" onclick="syncData().then(render)">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M23 4v6h-6M1 20v-6h6"/>
@@ -1679,13 +1827,6 @@
           </button>
           <h1>${folder?.name || 'Folder'}</h1>
           <div class="header-actions">
-            <button class="btn-icon" onclick="showAddFolder('${state.currentFolder}')" title="Add subfolder">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/>
-                <line x1="12" y1="11" x2="12" y2="17"/>
-                <line x1="9" y1="14" x2="15" y2="14"/>
-              </svg>
-            </button>
             <button class="btn-icon" onclick="showAddDeck('${state.currentFolder}')" title="Add deck">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="2" y="4" width="20" height="16" rx="2"/>
@@ -2002,6 +2143,8 @@
     }
 
     let selectedPriority = 'task';
+    let selectedLinkedDecks = [];
+    let deckPickerPath = null; // null = root
 
     function renderAddTodoView() {
       return `
@@ -2040,40 +2183,25 @@
             <div class="form-group">
               <label class="form-label">Time</label>
               <div class="time-picker-row">
-                <div class="scroll-picker" id="hour-picker">
-                  <div class="scroll-picker-highlight"></div>
-                  <div style="height:40px"></div>
-                  ${Array.from({length:12}, (_,i) => {
-                    const h = i + 1;
-                    return `<div class="scroll-picker-item" data-value="${h}">${h}</div>`;
-                  }).join('')}
-                  <div style="height:40px"></div>
-                </div>
+                <div class="scroll-picker" id="hour-picker"></div>
                 <span class="time-picker-separator">:</span>
-                <div class="scroll-picker" id="minute-picker">
-                  <div class="scroll-picker-highlight"></div>
-                  <div style="height:40px"></div>
-                  ${['00','05','10','15','20','25','30','35','40','45','50','55'].map(m =>
-                    `<div class="scroll-picker-item" data-value="${m}">${m}</div>`
-                  ).join('')}
-                  <div style="height:40px"></div>
-                </div>
-                <div class="scroll-picker" id="ampm-picker" style="max-width: 70px;">
-                  <div class="scroll-picker-highlight"></div>
-                  <div style="height:40px"></div>
-                  <div class="scroll-picker-item" data-value="AM">AM</div>
-                  <div class="scroll-picker-item" data-value="PM">PM</div>
-                  <div style="height:40px"></div>
-                </div>
+                <div class="scroll-picker" id="minute-picker"></div>
               </div>
             </div>
 
             <div class="form-group">
               <label class="form-label">Link Decks</label>
-              <select class="form-input" id="todo-decks" multiple style="height: auto; min-height: 70px;">
-                ${state.decks.map(deck => `<option value="${deck.id}">${deck.name}</option>`).join('')}
-              </select>
-              <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;">Hold to select multiple</p>
+              ${selectedLinkedDecks.length > 0 ? `
+                <div class="selected-decks-chips">
+                  ${selectedLinkedDecks.map(id => {
+                    const d = state.decks.find(x => x.id === id);
+                    return d ? `<div class="selected-deck-chip">${d.name}<button type="button" onclick="toggleLinkedDeck('${id}')">×</button></div>` : '';
+                  }).join('')}
+                </div>
+              ` : ''}
+              <div class="deck-picker" id="deck-picker">
+                ${renderDeckPicker()}
+              </div>
             </div>
 
             <div class="form-group">
@@ -2099,6 +2227,111 @@
       `;
     }
 
+    function renderDeckPicker() {
+      const currentPath = deckPickerPath;
+
+      // Build breadcrumb
+      let breadcrumb = '';
+      if (currentPath) {
+        const parts = [];
+        let p = currentPath;
+        while (p) {
+          const f = state.folders.find(x => x.path === p);
+          if (f) { parts.unshift(f); p = f.parentPath; } else break;
+        }
+        breadcrumb = `
+          <div class="deck-picker-breadcrumb">
+            <button onclick="navigateDeckPicker(null)">All</button>
+            ${parts.map((f, i) => `
+              <span>›</span>
+              ${i < parts.length - 1
+                ? `<button onclick="navigateDeckPicker('${f.path}')">${f.name}</button>`
+                : `<span style="color:var(--text-secondary)">${f.name}</span>`
+              }
+            `).join('')}
+          </div>
+        `;
+      }
+
+      // Get subfolders
+      const subfolders = state.folders
+        .filter(f => currentPath ? f.parentPath === currentPath : !f.parentPath)
+        .sort((a, b) => (a.order || 999) - (b.order || 999));
+
+      // Get decks in current folder
+      const decks = state.decks.filter(d => currentPath ? d.folderPath === currentPath : !d.folderPath || d.folderPath === '');
+
+      const items = [];
+
+      subfolders.forEach(f => {
+        const deckCount = state.decks.filter(d => d.folderPath === f.path).length +
+          state.folders.filter(sf => sf.parentPath === f.path).length;
+        items.push(`
+          <div class="deck-picker-item is-folder" onclick="navigateDeckPicker('${f.path}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
+            <span class="dp-name">${f.name}</span>
+            <span class="dp-meta">${deckCount}</span>
+            <span class="dp-arrow">›</span>
+          </div>
+        `);
+      });
+
+      decks.forEach(d => {
+        const checked = selectedLinkedDecks.includes(d.id);
+        const cardCount = state.cards.filter(c => c.deckId === d.id).length;
+        items.push(`
+          <div class="deck-picker-item" onclick="toggleLinkedDeck('${d.id}')">
+            <div class="dp-check ${checked ? 'checked' : ''}"></div>
+            <span class="dp-name">${d.name}</span>
+            <span class="dp-meta">${cardCount} cards</span>
+          </div>
+        `);
+      });
+
+      if (items.length === 0) {
+        items.push(`<div style="padding:16px;text-align:center;color:var(--text-muted);font-size:0.8rem;">No items here</div>`);
+      }
+
+      return breadcrumb + items.join('');
+    }
+
+    function navigateDeckPicker(path) {
+      deckPickerPath = path;
+      const picker = document.getElementById('deck-picker');
+      if (picker) {
+        picker.innerHTML = renderDeckPicker();
+        picker.scrollTop = 0;
+      }
+    }
+
+    function toggleLinkedDeck(deckId) {
+      const idx = selectedLinkedDecks.indexOf(deckId);
+      if (idx >= 0) {
+        selectedLinkedDecks.splice(idx, 1);
+      } else {
+        selectedLinkedDecks.push(deckId);
+      }
+      // Re-render just the deck picker + chips
+      const picker = document.getElementById('deck-picker');
+      if (picker) picker.innerHTML = renderDeckPicker();
+      // Re-render chips
+      const form = document.getElementById('todo-form');
+      if (form) {
+        const chipsContainer = form.querySelector('.selected-decks-chips');
+        const label = form.querySelector('.form-group:has(#deck-picker) .form-label');
+        const parent = document.getElementById('deck-picker').parentElement;
+        let existingChips = parent.querySelector('.selected-decks-chips');
+        if (existingChips) existingChips.remove();
+        if (selectedLinkedDecks.length > 0) {
+          const chipsHtml = `<div class="selected-decks-chips">${selectedLinkedDecks.map(id => {
+            const d = state.decks.find(x => x.id === id);
+            return d ? `<div class="selected-deck-chip">${d.name}<button type="button" onclick="toggleLinkedDeck('${id}')">×</button></div>` : '';
+          }).join('')}</div>`;
+          document.getElementById('deck-picker').insertAdjacentHTML('beforebegin', chipsHtml);
+        }
+      }
+    }
+
     function selectPriority(p) {
       selectedPriority = p;
       document.querySelectorAll('.priority-option').forEach(el => {
@@ -2106,32 +2339,77 @@
       });
     }
 
-    function initTimePickers() {
-      ['hour-picker', 'minute-picker', 'ampm-picker'].forEach(id => {
-        const picker = document.getElementById(id);
-        if (!picker) return;
+    // ============ LOOPING 24HR TIME PICKER ============
+    const LOOP_COPIES = 3; // number of full sets to render for looping illusion
 
-        // Set default: 9:00 AM
-        const items = picker.querySelectorAll('.scroll-picker-item');
-        let defaultIdx = 0;
-        if (id === 'hour-picker') defaultIdx = 8; // 9
-        else if (id === 'minute-picker') defaultIdx = 0; // 00
-        else defaultIdx = 0; // AM
-
-        if (items[defaultIdx]) {
-          setTimeout(() => {
-            items[defaultIdx].scrollIntoView({ block: 'center', behavior: 'instant' });
-            updatePickerSelection(picker);
-          }, 50);
-        }
-
-        picker.addEventListener('scroll', () => updatePickerSelection(picker), { passive: true });
-        items.forEach(item => {
-          item.addEventListener('click', () => {
-            item.scrollIntoView({ block: 'center', behavior: 'smooth' });
-          });
+    function buildLoopingItems(values, displayFn) {
+      let html = '';
+      for (let c = 0; c < LOOP_COPIES; c++) {
+        values.forEach(v => {
+          const display = displayFn ? displayFn(v) : v;
+          html += `<div class="scroll-picker-item" data-value="${v}" data-copy="${c}">${display}</div>`;
         });
+      }
+      return html;
+    }
+
+    function initTimePickers() {
+      const hours = Array.from({length: 24}, (_, i) => i);
+      const minutes = ['00','05','10','15','20','25','30','35','40','45','50','55'];
+
+      const hourPicker = document.getElementById('hour-picker');
+      const minutePicker = document.getElementById('minute-picker');
+      if (!hourPicker || !minutePicker) return;
+
+      // Build content
+      hourPicker.innerHTML = `<div class="scroll-picker-highlight"></div>` +
+        buildLoopingItems(hours, h => String(h).padStart(2, '0'));
+      minutePicker.innerHTML = `<div class="scroll-picker-highlight"></div>` +
+        buildLoopingItems(minutes);
+
+      // Setup each picker
+      [
+        { el: hourPicker, count: 24, defaultVal: 9 },
+        { el: minutePicker, count: 12, defaultVal: 0 }
+      ].forEach(({ el, count, defaultVal }) => {
+        const itemH = 40;
+        const totalPerSet = count;
+
+        // Scroll to middle copy's default
+        setTimeout(() => {
+          const middleStart = totalPerSet * Math.floor(LOOP_COPIES / 2);
+          el.scrollTop = (middleStart + defaultVal) * itemH - (el.clientHeight / 2 - itemH / 2);
+          updatePickerSelection(el);
+        }, 30);
+
+        el.addEventListener('scroll', () => {
+          updatePickerSelection(el);
+          // Loop: if near top or bottom, jump to middle copy
+          const oneSetHeight = totalPerSet * itemH;
+          const middleTop = oneSetHeight;
+          const middleBottom = oneSetHeight * 2;
+          if (el.scrollTop < itemH * 2) {
+            el.scrollTop += oneSetHeight;
+          } else if (el.scrollTop > middleBottom - itemH * 2) {
+            el.scrollTop -= oneSetHeight;
+          }
+        }, { passive: true });
+
+        // Snap on scroll end
+        let scrollTimer;
+        el.addEventListener('scroll', () => {
+          clearTimeout(scrollTimer);
+          scrollTimer = setTimeout(() => {
+            snapToNearest(el, itemH);
+          }, 80);
+        }, { passive: true });
       });
+    }
+
+    function snapToNearest(picker, itemH) {
+      const centerOffset = picker.clientHeight / 2 - itemH / 2;
+      const target = Math.round((picker.scrollTop + centerOffset) / itemH) * itemH - centerOffset;
+      picker.scrollTo({ top: target, behavior: 'smooth' });
     }
 
     function updatePickerSelection(picker) {
@@ -2162,13 +2440,8 @@
         return sel ? sel.dataset.value : null;
       };
 
-      let hour = parseInt(getSelected('hour-picker')) || 9;
+      const hour = getSelected('hour-picker') || '09';
       const minute = getSelected('minute-picker') || '00';
-      const ampm = getSelected('ampm-picker') || 'AM';
-
-      if (ampm === 'PM' && hour !== 12) hour += 12;
-      if (ampm === 'AM' && hour === 12) hour = 0;
-
       return `${String(hour).padStart(2, '0')}:${minute}`;
     }
 
@@ -2491,6 +2764,8 @@
     function showAddTodo() {
       todoReminders = [];
       selectedPriority = 'task';
+      selectedLinkedDecks = [];
+      deckPickerPath = null;
       state.currentView = 'add-todo';
       render();
     }
@@ -2902,11 +3177,7 @@
 
     function formatTime(time) {
       if (!time) return '';
-      const [hours, minutes] = time.split(':');
-      const h = parseInt(hours);
-      const ampm = h >= 12 ? 'PM' : 'AM';
-      const h12 = h % 12 || 12;
-      return `${h12}:${minutes} ${ampm}`;
+      return time; // Already in HH:MM 24hr format
     }
 
     async function saveTodo(event) {
@@ -2916,8 +3187,7 @@
       const description = document.getElementById('todo-description')?.value?.trim() || '';
       const dueDate = document.getElementById('todo-due').value;
       const dueTime = dueDate ? getPickerTime() : '';
-      const decksSelect = document.getElementById('todo-decks');
-      const linkedDecks = Array.from(decksSelect.selectedOptions).map(o => o.value);
+      const linkedDecks = [...selectedLinkedDecks];
 
       const todo = {
         id: 'todo_' + Date.now(),
