@@ -434,6 +434,9 @@
       border: 2px solid var(--border);
       text-align: center;
       overflow: auto;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
     }
 
     .flashcard-back {
@@ -478,13 +481,13 @@
 
     .study-actions {
       display: flex;
-      gap: 16px;
+      justify-content: center;
       margin-top: 24px;
     }
 
     .study-btn {
-      width: 80px;
-      height: 80px;
+      width: 52px;
+      height: 52px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -495,39 +498,21 @@
     }
 
     .study-btn svg {
-      width: 32px;
-      height: 32px;
-    }
-
-    .study-btn.wrong {
-      background: rgba(248, 113, 113, 0.2);
-      color: var(--error);
-    }
-
-    .study-btn.wrong:hover {
-      background: rgba(248, 113, 113, 0.3);
-    }
-
-    .study-btn.correct {
-      background: rgba(74, 222, 128, 0.2);
-      color: var(--success);
-    }
-
-    .study-btn.correct:hover {
-      background: rgba(74, 222, 128, 0.3);
+      width: 22px;
+      height: 22px;
     }
 
     .study-btn.back {
-      background: rgba(160, 160, 160, 0.2);
+      background: rgba(160, 160, 160, 0.15);
       color: var(--text-secondary);
     }
 
     .study-btn.back:hover {
-      background: rgba(160, 160, 160, 0.3);
+      background: rgba(160, 160, 160, 0.25);
     }
 
     .study-btn.back:disabled {
-      opacity: 0.3;
+      opacity: 0.2;
       cursor: not-allowed;
     }
 
@@ -541,6 +526,8 @@
     .flashcard {
       touch-action: none;
       user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
       will-change: transform;
       transition: none;
     }
@@ -638,15 +625,12 @@
     .todo-item {
       display: flex;
       align-items: flex-start;
-      gap: 16px;
+      gap: 14px;
       padding: 14px 4px;
       border-bottom: 1px solid var(--border);
       margin-bottom: 0;
       background: none;
       border-radius: 0;
-      border-left: none;
-      border-right: none;
-      border-top: none;
     }
 
     .todo-item:last-child {
@@ -701,7 +685,17 @@
       font-weight: 400;
       color: var(--text-primary);
       line-height: 1.4;
-      margin-bottom: 2px;
+    }
+
+    .todo-description {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-top: 2px;
+      line-height: 1.35;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     .todo-details {
@@ -709,21 +703,21 @@
       flex-wrap: wrap;
       align-items: center;
       gap: 8px;
-      margin-top: 4px;
+      margin-top: 6px;
     }
 
     .todo-detail-chip {
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--text-secondary);
       line-height: 1;
     }
 
     .todo-detail-chip svg {
-      width: 13px;
-      height: 13px;
+      width: 12px;
+      height: 12px;
       flex-shrink: 0;
     }
 
@@ -731,22 +725,50 @@
       color: var(--error);
     }
 
-    .todo-detail-chip.due-soon {
-      color: var(--warning);
+    /* Priority badges */
+    .priority-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+
+    .priority-badge.summative {
+      background: rgba(248, 113, 113, 0.2);
+      color: #f87171;
+    }
+
+    .priority-badge.formative {
+      background: rgba(251, 191, 36, 0.2);
+      color: #fbbf24;
+    }
+
+    .priority-badge.task {
+      background: rgba(74, 158, 255, 0.15);
+      color: #4a9eff;
+    }
+
+    .priority-badge.low {
+      background: rgba(160, 160, 160, 0.15);
+      color: #888;
     }
 
     .todo-decks {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
-      margin-top: 8px;
+      margin-top: 6px;
     }
 
     .todo-deck-link {
-      padding: 4px 10px;
+      padding: 3px 9px;
       background: var(--bg-tertiary);
-      border-radius: 14px;
-      font-size: 0.7rem;
+      border-radius: 12px;
+      font-size: 0.68rem;
       color: var(--accent);
       cursor: pointer;
       transition: var(--transition);
@@ -768,7 +790,7 @@
       border-radius: 50%;
       transition: var(--transition);
       flex-shrink: 0;
-      opacity: 0.5;
+      opacity: 0.4;
     }
 
     .todo-delete-btn:hover {
@@ -780,6 +802,54 @@
     .todo-delete-btn svg {
       width: 16px;
       height: 16px;
+    }
+
+    /* Completed section */
+    .completed-section {
+      margin-top: 24px;
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+    }
+
+    .completed-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 4px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .completed-header svg {
+      width: 18px;
+      height: 18px;
+      color: var(--text-muted);
+      transition: transform 0.2s ease;
+    }
+
+    .completed-header.expanded svg {
+      transform: rotate(90deg);
+    }
+
+    .completed-header span {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .completed-list {
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .completed-list .todo-item {
+      opacity: 0.5;
+    }
+
+    .completed-list .todo-title {
+      text-decoration: line-through;
+      color: var(--text-secondary);
     }
 
     /* FAB for adding todos */
@@ -816,24 +886,133 @@
       height: 24px;
     }
 
-    .todo-reminders {
+    /* Priority selector chips */
+    .priority-options {
       display: flex;
+      gap: 8px;
       flex-wrap: wrap;
-      gap: 4px;
-      margin-top: 4px;
     }
 
-    .todo-reminder-badge {
-      display: inline-flex;
+    .priority-option {
+      padding: 8px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .priority-option:active {
+      transform: scale(0.95);
+    }
+
+    .priority-option.selected {
+      border-color: transparent;
+    }
+
+    .priority-option.selected[data-priority="summative"] {
+      background: rgba(248, 113, 113, 0.2);
+      color: #f87171;
+      border-color: rgba(248, 113, 113, 0.4);
+    }
+
+    .priority-option.selected[data-priority="formative"] {
+      background: rgba(251, 191, 36, 0.2);
+      color: #fbbf24;
+      border-color: rgba(251, 191, 36, 0.4);
+    }
+
+    .priority-option.selected[data-priority="task"] {
+      background: rgba(74, 158, 255, 0.15);
+      color: #4a9eff;
+      border-color: rgba(74, 158, 255, 0.3);
+    }
+
+    .priority-option.selected[data-priority="low"] {
+      background: rgba(160, 160, 160, 0.15);
+      color: #999;
+      border-color: rgba(160, 160, 160, 0.3);
+    }
+
+    /* Time scroll picker */
+    .time-picker-row {
+      display: flex;
+      gap: 8px;
       align-items: center;
-      gap: 3px;
-      font-size: 0.7rem;
-      color: var(--text-muted);
     }
 
-    .todo-reminder-badge svg {
-      width: 11px;
-      height: 11px;
+    .scroll-picker {
+      flex: 1;
+      height: 120px;
+      overflow-y: auto;
+      scroll-snap-type: y mandatory;
+      -webkit-overflow-scrolling: touch;
+      border-radius: var(--radius-sm);
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border);
+      position: relative;
+    }
+
+    .scroll-picker::before,
+    .scroll-picker::after {
+      content: '';
+      position: sticky;
+      display: block;
+      height: 40px;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .scroll-picker::before {
+      top: 0;
+      background: linear-gradient(to bottom, var(--bg-tertiary), transparent);
+    }
+
+    .scroll-picker::after {
+      bottom: 0;
+      background: linear-gradient(to top, var(--bg-tertiary), transparent);
+    }
+
+    .scroll-picker-item {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      scroll-snap-align: center;
+      font-size: 1rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: color 0.15s, font-size 0.15s;
+    }
+
+    .scroll-picker-item.selected {
+      color: var(--text-primary);
+      font-size: 1.15rem;
+      font-weight: 500;
+    }
+
+    .scroll-picker-highlight {
+      position: absolute;
+      top: 50%;
+      left: 4px;
+      right: 4px;
+      height: 40px;
+      transform: translateY(-50%);
+      border-radius: 6px;
+      background: rgba(74, 158, 255, 0.1);
+      border: 1px solid rgba(74, 158, 255, 0.2);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .time-picker-separator {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-secondary);
     }
 
     /* ============ MODALS ============ */
@@ -1044,13 +1223,13 @@
       }
 
       .study-btn {
-        width: 64px;
-        height: 64px;
+        width: 44px;
+        height: 44px;
       }
 
       .study-btn svg {
-        width: 28px;
-        height: 28px;
+        width: 18px;
+        height: 18px;
       }
 
       .swipe-hint {
@@ -1217,6 +1396,7 @@
       editingCard: null,
       editingParentFolder: null,
       studySession: null,
+      showCompleted: false,
       settings: {
         shuffle: true,
         reverse: false
@@ -1386,6 +1566,7 @@
           break;
         case 'add-todo':
           app.innerHTML = renderAddTodoView();
+          setTimeout(initTimePickers, 50);
           break;
         case 'add-folder':
           app.innerHTML = renderAddFolderView();
@@ -1660,20 +1841,10 @@
           </div>
 
           <div class="study-actions">
-            <button class="study-btn back" onclick="goBackCard()" title="Back" ${!session.history || session.history.length === 0 ? 'disabled' : ''}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                <polyline points="15 18 9 12 15 6"/>
-              </svg>
-            </button>
-            <button class="study-btn wrong" onclick="markCard(false)" title="Wrong">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                <line x1="18" y1="6" x2="6" y2="18"/>
-                <line x1="6" y1="6" x2="18" y2="18"/>
-              </svg>
-            </button>
-            <button class="study-btn correct" onclick="markCard(true)" title="Correct">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                <polyline points="20 6 9 17 4 12"/>
+            <button class="study-btn back" onclick="goBackCard()" title="Undo" ${!session.history || session.history.length === 0 ? 'disabled' : ''}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M3 10h10a5 5 0 015 5v0a5 5 0 01-5 5H10"/>
+                <polyline points="7 14 3 10 7 6"/>
               </svg>
             </button>
           </div>
@@ -1720,8 +1891,68 @@
       `;
     }
 
+    const PRIORITY_ORDER = { summative: 1, formative: 2, task: 3, low: 4 };
+
+    function sortTodos(todos) {
+      return [...todos].sort((a, b) => {
+        // First by due date
+        if (!a.dueDate && !b.dueDate) {
+          return (PRIORITY_ORDER[a.priority] || 99) - (PRIORITY_ORDER[b.priority] || 99);
+        }
+        if (!a.dueDate) return 1;
+        if (!b.dueDate) return -1;
+        const dateDiff = new Date(a.dueDate) - new Date(b.dueDate);
+        if (dateDiff !== 0) return dateDiff;
+        // Same due date — sort by priority
+        return (PRIORITY_ORDER[a.priority] || 99) - (PRIORITY_ORDER[b.priority] || 99);
+      });
+    }
+
+    function renderTodoItem(todo, isCompleted = false) {
+      const timeStr = todo.dueTime ? formatTime(todo.dueTime) : '';
+      return `
+        <div class="todo-item">
+          <div class="todo-checkbox${isCompleted ? ' checked' : ''}" onclick="${isCompleted ? `uncompleteTodo('${todo.id}')` : `completeTodo('${todo.id}')`}"></div>
+          <div class="todo-content">
+            <div class="todo-title">${todo.title}</div>
+            ${todo.description ? `<div class="todo-description">${todo.description}</div>` : ''}
+            <div class="todo-details">
+              ${todo.priority ? `<span class="priority-badge ${todo.priority}">${todo.priority}</span>` : ''}
+              ${todo.dueDate ? `
+                <span class="todo-detail-chip ${isOverdue(todo.dueDate) && !isCompleted ? 'overdue' : ''}">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  ${formatDate(todo.dueDate)}${timeStr ? ' · ' + timeStr : ''}
+                </span>
+              ` : ''}
+              ${todo.reminders && todo.reminders.length > 0 ? `
+                <span class="todo-detail-chip">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+                  ${todo.reminders.length}
+                </span>
+              ` : ''}
+            </div>
+            ${todo.linkedDecks && todo.linkedDecks.length > 0 ? `
+              <div class="todo-decks">
+                ${todo.linkedDecks.map(deckId => {
+                  const deck = state.decks.find(d => d.id === deckId);
+                  return deck ? `<button class="todo-deck-link" onclick="event.stopPropagation(); openDeckFromTodo('${deckId}')">${deck.name}</button>` : '';
+                }).join('')}
+              </div>
+            ` : ''}
+          </div>
+          <button class="todo-delete-btn" onclick="event.stopPropagation(); deleteTodo('${todo.id}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+            </svg>
+          </button>
+        </div>
+      `;
+    }
+
     function renderTodosView() {
-      const activeTodos = state.todos.filter(t => !t.completed);
+      const activeTodos = sortTodos(state.todos.filter(t => !t.completed));
+      const completedTodos = state.todos.filter(t => t.completed);
+      const showCompleted = state.showCompleted || false;
 
       return `
         <div class="header">
@@ -1736,45 +1967,7 @@
         <div class="container">
           ${activeTodos.length > 0 ? `
             <div class="todo-list">
-              ${activeTodos.map(todo => `
-                <div class="todo-item">
-                  <div class="todo-checkbox" onclick="completeTodo('${todo.id}')"></div>
-                  <div class="todo-content">
-                    <div class="todo-title">${todo.title}</div>
-                    <div class="todo-details">
-                      ${todo.dueDate ? `
-                        <span class="todo-detail-chip ${isOverdue(todo.dueDate) ? 'overdue' : ''}">
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                          ${formatDate(todo.dueDate)}
-                        </span>
-                      ` : ''}
-                      ${todo.reminders && todo.reminders.length > 0 ? `
-                        <span class="todo-detail-chip">
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
-                          ${todo.reminders.length}
-                        </span>
-                      ` : ''}
-                    </div>
-                    ${todo.linkedDecks && todo.linkedDecks.length > 0 ? `
-                      <div class="todo-decks">
-                        ${todo.linkedDecks.map(deckId => {
-                          const deck = state.decks.find(d => d.id === deckId);
-                          return deck ? `
-                            <button class="todo-deck-link" onclick="event.stopPropagation(); openDeckFromTodo('${deckId}')">
-                              ${deck.name}
-                            </button>
-                          ` : '';
-                        }).join('')}
-                      </div>
-                    ` : ''}
-                  </div>
-                  <button class="todo-delete-btn" onclick="event.stopPropagation(); deleteTodo('${todo.id}')">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
-                    </svg>
-                  </button>
-                </div>
-              `).join('')}
+              ${activeTodos.map(t => renderTodoItem(t)).join('')}
             </div>
           ` : `
             <div class="empty-state">
@@ -1786,6 +1979,18 @@
               <p>Tap + to get started</p>
             </div>
           `}
+
+          ${completedTodos.length > 0 ? `
+            <div class="completed-section">
+              <div class="completed-header ${showCompleted ? 'expanded' : ''}" onclick="state.showCompleted = !state.showCompleted; render();">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                <span>Completed (${completedTodos.length})</span>
+              </div>
+              <div class="completed-list" style="max-height: ${showCompleted ? completedTodos.length * 80 + 'px' : '0'};">
+                ${completedTodos.map(t => renderTodoItem(t, true)).join('')}
+              </div>
+            </div>
+          ` : ''}
         </div>
         <button class="fab" onclick="showAddTodo()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -1795,6 +2000,8 @@
         </button>
       `;
     }
+
+    let selectedPriority = 'task';
 
     function renderAddTodoView() {
       return `
@@ -1807,47 +2014,162 @@
           <form id="todo-form" onsubmit="saveTodo(event)">
             <div class="form-group">
               <label class="form-label">Title *</label>
-              <input type="text" class="form-input" id="todo-title" required placeholder="What do you need to do?">
+              <input type="text" class="form-input" id="todo-title" required placeholder="Task name">
             </div>
-            
+
+            <div class="form-group">
+              <label class="form-label">Description</label>
+              <textarea class="form-input" id="todo-description" placeholder="Add details" rows="2"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Priority</label>
+              <div class="priority-options">
+                <button type="button" class="priority-option ${selectedPriority === 'summative' ? 'selected' : ''}" data-priority="summative" onclick="selectPriority('summative')">Summative</button>
+                <button type="button" class="priority-option ${selectedPriority === 'formative' ? 'selected' : ''}" data-priority="formative" onclick="selectPriority('formative')">Formative</button>
+                <button type="button" class="priority-option ${selectedPriority === 'task' ? 'selected' : ''}" data-priority="task" onclick="selectPriority('task')">Task</button>
+                <button type="button" class="priority-option ${selectedPriority === 'low' ? 'selected' : ''}" data-priority="low" onclick="selectPriority('low')">Low</button>
+              </div>
+            </div>
+
             <div class="form-group">
               <label class="form-label">Due Date</label>
               <input type="date" class="form-input" id="todo-due">
             </div>
-            
+
+            <div class="form-group">
+              <label class="form-label">Time</label>
+              <div class="time-picker-row">
+                <div class="scroll-picker" id="hour-picker">
+                  <div class="scroll-picker-highlight"></div>
+                  <div style="height:40px"></div>
+                  ${Array.from({length:12}, (_,i) => {
+                    const h = i + 1;
+                    return `<div class="scroll-picker-item" data-value="${h}">${h}</div>`;
+                  }).join('')}
+                  <div style="height:40px"></div>
+                </div>
+                <span class="time-picker-separator">:</span>
+                <div class="scroll-picker" id="minute-picker">
+                  <div class="scroll-picker-highlight"></div>
+                  <div style="height:40px"></div>
+                  ${['00','05','10','15','20','25','30','35','40','45','50','55'].map(m =>
+                    `<div class="scroll-picker-item" data-value="${m}">${m}</div>`
+                  ).join('')}
+                  <div style="height:40px"></div>
+                </div>
+                <div class="scroll-picker" id="ampm-picker" style="max-width: 70px;">
+                  <div class="scroll-picker-highlight"></div>
+                  <div style="height:40px"></div>
+                  <div class="scroll-picker-item" data-value="AM">AM</div>
+                  <div class="scroll-picker-item" data-value="PM">PM</div>
+                  <div style="height:40px"></div>
+                </div>
+              </div>
+            </div>
+
             <div class="form-group">
               <label class="form-label">Link Decks</label>
-              <select class="form-input" id="todo-decks" multiple style="height: auto; min-height: 80px;">
-                ${state.decks.map(deck => `
-                  <option value="${deck.id}">${deck.name}</option>
-                `).join('')}
+              <select class="form-input" id="todo-decks" multiple style="height: auto; min-height: 70px;">
+                ${state.decks.map(deck => `<option value="${deck.id}">${deck.name}</option>`).join('')}
               </select>
               <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;">Hold to select multiple</p>
             </div>
-            
+
             <div class="form-group">
               <label class="form-label">Reminders</label>
               <div id="reminders-container" class="reminder-chips"></div>
-              
               <div style="margin-top: 12px;">
                 <div style="display: flex; gap: 8px; margin-bottom: 8px;">
                   <input type="date" class="form-input" id="reminder-date" style="flex: 1;">
                   <input type="time" class="form-input" id="reminder-time" value="09:00" style="width: 110px;">
                   <button type="button" class="btn btn-secondary" style="padding: 8px 14px;" onclick="addReminderFromInputs()">+</button>
                 </div>
-                
                 <button type="button" class="btn btn-secondary" style="width: 100%; font-size: 0.8rem; padding: 8px;" onclick="autoGenerateReminders()">
                   Auto-generate (1-3-7-14 days before)
                 </button>
               </div>
             </div>
-            
+
             <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 24px;">
               Save Task
             </button>
           </form>
         </div>
       `;
+    }
+
+    function selectPriority(p) {
+      selectedPriority = p;
+      document.querySelectorAll('.priority-option').forEach(el => {
+        el.classList.toggle('selected', el.dataset.priority === p);
+      });
+    }
+
+    function initTimePickers() {
+      ['hour-picker', 'minute-picker', 'ampm-picker'].forEach(id => {
+        const picker = document.getElementById(id);
+        if (!picker) return;
+
+        // Set default: 9:00 AM
+        const items = picker.querySelectorAll('.scroll-picker-item');
+        let defaultIdx = 0;
+        if (id === 'hour-picker') defaultIdx = 8; // 9
+        else if (id === 'minute-picker') defaultIdx = 0; // 00
+        else defaultIdx = 0; // AM
+
+        if (items[defaultIdx]) {
+          setTimeout(() => {
+            items[defaultIdx].scrollIntoView({ block: 'center', behavior: 'instant' });
+            updatePickerSelection(picker);
+          }, 50);
+        }
+
+        picker.addEventListener('scroll', () => updatePickerSelection(picker), { passive: true });
+        items.forEach(item => {
+          item.addEventListener('click', () => {
+            item.scrollIntoView({ block: 'center', behavior: 'smooth' });
+          });
+        });
+      });
+    }
+
+    function updatePickerSelection(picker) {
+      const items = picker.querySelectorAll('.scroll-picker-item');
+      const pickerRect = picker.getBoundingClientRect();
+      const center = pickerRect.top + pickerRect.height / 2;
+      let closest = null;
+      let closestDist = Infinity;
+
+      items.forEach(item => {
+        const rect = item.getBoundingClientRect();
+        const dist = Math.abs(rect.top + rect.height / 2 - center);
+        item.classList.remove('selected');
+        if (dist < closestDist) {
+          closestDist = dist;
+          closest = item;
+        }
+      });
+
+      if (closest) closest.classList.add('selected');
+    }
+
+    function getPickerTime() {
+      const getSelected = (id) => {
+        const picker = document.getElementById(id);
+        if (!picker) return null;
+        const sel = picker.querySelector('.scroll-picker-item.selected');
+        return sel ? sel.dataset.value : null;
+      };
+
+      let hour = parseInt(getSelected('hour-picker')) || 9;
+      const minute = getSelected('minute-picker') || '00';
+      const ampm = getSelected('ampm-picker') || 'AM';
+
+      if (ampm === 'PM' && hour !== 12) hour += 12;
+      if (ampm === 'AM' && hour === 12) hour = 0;
+
+      return `${String(hour).padStart(2, '0')}:${minute}`;
     }
 
     function renderAddFolderView() {
@@ -2168,6 +2490,7 @@
 
     function showAddTodo() {
       todoReminders = [];
+      selectedPriority = 'task';
       state.currentView = 'add-todo';
       render();
     }
@@ -2590,48 +2913,45 @@
       event.preventDefault();
       
       const title = document.getElementById('todo-title').value;
+      const description = document.getElementById('todo-description')?.value?.trim() || '';
       const dueDate = document.getElementById('todo-due').value;
+      const dueTime = dueDate ? getPickerTime() : '';
       const decksSelect = document.getElementById('todo-decks');
       const linkedDecks = Array.from(decksSelect.selectedOptions).map(o => o.value);
 
       const todo = {
         id: 'todo_' + Date.now(),
         title,
+        description,
         dueDate,
+        dueTime,
+        priority: selectedPriority,
         reminders: [...todoReminders],
         linkedDecks,
         completed: false
       };
 
-      console.log('Saving todo with reminders:', todo.reminders);
-
-      // Add locally first
       state.todos.push(todo);
-      state.todos.sort((a, b) => {
-        if (!a.dueDate) return 1;
-        if (!b.dueDate) return -1;
-        return new Date(a.dueDate) - new Date(b.dueDate);
-      });
       saveToLocal();
 
       // Sync to server
       try {
-        const remindersJson = JSON.stringify(todo.reminders);
-        const linkedDecksJson = JSON.stringify(todo.linkedDecks);
-        console.log('Sending reminders JSON:', remindersJson);
-        
         await apiCall('addTodo', {
           id: todo.id,
           title: todo.title,
+          description: todo.description,
           dueDate: todo.dueDate,
-          reminders: remindersJson,
-          linkedDecks: linkedDecksJson
+          dueTime: todo.dueTime,
+          priority: todo.priority,
+          reminders: JSON.stringify(todo.reminders),
+          linkedDecks: JSON.stringify(todo.linkedDecks)
         });
       } catch (error) {
         console.error('Failed to sync todo:', error);
       }
 
       todoReminders = [];
+      selectedPriority = 'task';
       scheduleReminders();
       state.currentView = 'todos';
       render();
@@ -2641,6 +2961,7 @@
       const todo = state.todos.find(t => t.id === id);
       if (todo) {
         todo.completed = true;
+        todo.completedAt = new Date().toISOString();
         saveToLocal();
         render();
 
@@ -2648,6 +2969,22 @@
           await apiCall('completeTodo', { id });
         } catch (error) {
           console.error('Failed to sync todo completion:', error);
+        }
+      }
+    }
+
+    async function uncompleteTodo(id) {
+      const todo = state.todos.find(t => t.id === id);
+      if (todo) {
+        todo.completed = false;
+        delete todo.completedAt;
+        saveToLocal();
+        render();
+
+        try {
+          await apiCall('uncompleteTodo', { id });
+        } catch (error) {
+          console.error('Failed to sync todo uncompletion:', error);
         }
       }
     }
