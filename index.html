@@ -948,83 +948,6 @@
       border-color: rgba(160, 160, 160, 0.3);
     }
 
-    /* Time scroll picker */
-    .time-picker-row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .scroll-picker {
-      flex: 1;
-      height: 120px;
-      overflow-y: auto;
-      scroll-snap-type: y mandatory;
-      -webkit-overflow-scrolling: touch;
-      border-radius: var(--radius-sm);
-      background: var(--bg-tertiary);
-      border: 1px solid var(--border);
-      position: relative;
-    }
-
-    .scroll-picker::before,
-    .scroll-picker::after {
-      content: '';
-      position: sticky;
-      display: block;
-      height: 40px;
-      z-index: 2;
-      pointer-events: none;
-    }
-
-    .scroll-picker::before {
-      top: 0;
-      background: linear-gradient(to bottom, var(--bg-tertiary), transparent);
-    }
-
-    .scroll-picker::after {
-      bottom: 0;
-      background: linear-gradient(to top, var(--bg-tertiary), transparent);
-    }
-
-    .scroll-picker-item {
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      scroll-snap-align: center;
-      font-size: 1rem;
-      color: var(--text-secondary);
-      cursor: pointer;
-      transition: color 0.15s, font-size 0.15s;
-    }
-
-    .scroll-picker-item.selected {
-      color: var(--text-primary);
-      font-size: 1.15rem;
-      font-weight: 500;
-    }
-
-    .scroll-picker-highlight {
-      position: absolute;
-      top: 50%;
-      left: 4px;
-      right: 4px;
-      height: 40px;
-      transform: translateY(-50%);
-      border-radius: 6px;
-      background: rgba(74, 158, 255, 0.1);
-      border: 1px solid rgba(74, 158, 255, 0.2);
-      pointer-events: none;
-      z-index: 1;
-    }
-
-    .time-picker-separator {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--text-secondary);
-    }
-
     /* Deck picker (folder navigation) */
     .deck-picker {
       border: 1px solid var(--border);
@@ -1720,7 +1643,6 @@
           break;
         case 'add-todo':
           app.innerHTML = renderAddTodoView();
-          setTimeout(initTimePickers, 50);
           break;
         case 'add-folder':
           app.innerHTML = renderAddFolderView();
@@ -2182,11 +2104,7 @@
 
             <div class="form-group">
               <label class="form-label">Time</label>
-              <div class="time-picker-row">
-                <div class="scroll-picker" id="hour-picker"></div>
-                <span class="time-picker-separator">:</span>
-                <div class="scroll-picker" id="minute-picker"></div>
-              </div>
+              <input type="time" class="form-input" id="todo-time" value="09:00">
             </div>
 
             <div class="form-group">
@@ -2339,110 +2257,9 @@
       });
     }
 
-    // ============ LOOPING 24HR TIME PICKER ============
-    const LOOP_COPIES = 3; // number of full sets to render for looping illusion
-
-    function buildLoopingItems(values, displayFn) {
-      let html = '';
-      for (let c = 0; c < LOOP_COPIES; c++) {
-        values.forEach(v => {
-          const display = displayFn ? displayFn(v) : v;
-          html += `<div class="scroll-picker-item" data-value="${v}" data-copy="${c}">${display}</div>`;
-        });
-      }
-      return html;
-    }
-
-    function initTimePickers() {
-      const hours = Array.from({length: 24}, (_, i) => i);
-      const minutes = ['00','05','10','15','20','25','30','35','40','45','50','55'];
-
-      const hourPicker = document.getElementById('hour-picker');
-      const minutePicker = document.getElementById('minute-picker');
-      if (!hourPicker || !minutePicker) return;
-
-      // Build content
-      hourPicker.innerHTML = `<div class="scroll-picker-highlight"></div>` +
-        buildLoopingItems(hours, h => String(h).padStart(2, '0'));
-      minutePicker.innerHTML = `<div class="scroll-picker-highlight"></div>` +
-        buildLoopingItems(minutes);
-
-      // Setup each picker
-      [
-        { el: hourPicker, count: 24, defaultVal: 9 },
-        { el: minutePicker, count: 12, defaultVal: 0 }
-      ].forEach(({ el, count, defaultVal }) => {
-        const itemH = 40;
-        const totalPerSet = count;
-
-        // Scroll to middle copy's default
-        setTimeout(() => {
-          const middleStart = totalPerSet * Math.floor(LOOP_COPIES / 2);
-          el.scrollTop = (middleStart + defaultVal) * itemH - (el.clientHeight / 2 - itemH / 2);
-          updatePickerSelection(el);
-        }, 30);
-
-        el.addEventListener('scroll', () => {
-          updatePickerSelection(el);
-          // Loop: if near top or bottom, jump to middle copy
-          const oneSetHeight = totalPerSet * itemH;
-          const middleTop = oneSetHeight;
-          const middleBottom = oneSetHeight * 2;
-          if (el.scrollTop < itemH * 2) {
-            el.scrollTop += oneSetHeight;
-          } else if (el.scrollTop > middleBottom - itemH * 2) {
-            el.scrollTop -= oneSetHeight;
-          }
-        }, { passive: true });
-
-        // Snap on scroll end
-        let scrollTimer;
-        el.addEventListener('scroll', () => {
-          clearTimeout(scrollTimer);
-          scrollTimer = setTimeout(() => {
-            snapToNearest(el, itemH);
-          }, 80);
-        }, { passive: true });
-      });
-    }
-
-    function snapToNearest(picker, itemH) {
-      const centerOffset = picker.clientHeight / 2 - itemH / 2;
-      const target = Math.round((picker.scrollTop + centerOffset) / itemH) * itemH - centerOffset;
-      picker.scrollTo({ top: target, behavior: 'smooth' });
-    }
-
-    function updatePickerSelection(picker) {
-      const items = picker.querySelectorAll('.scroll-picker-item');
-      const pickerRect = picker.getBoundingClientRect();
-      const center = pickerRect.top + pickerRect.height / 2;
-      let closest = null;
-      let closestDist = Infinity;
-
-      items.forEach(item => {
-        const rect = item.getBoundingClientRect();
-        const dist = Math.abs(rect.top + rect.height / 2 - center);
-        item.classList.remove('selected');
-        if (dist < closestDist) {
-          closestDist = dist;
-          closest = item;
-        }
-      });
-
-      if (closest) closest.classList.add('selected');
-    }
-
     function getPickerTime() {
-      const getSelected = (id) => {
-        const picker = document.getElementById(id);
-        if (!picker) return null;
-        const sel = picker.querySelector('.scroll-picker-item.selected');
-        return sel ? sel.dataset.value : null;
-      };
-
-      const hour = getSelected('hour-picker') || '09';
-      const minute = getSelected('minute-picker') || '00';
-      return `${String(hour).padStart(2, '0')}:${minute}`;
+      const input = document.getElementById('todo-time');
+      return input ? input.value || '09:00' : '09:00';
     }
 
     function renderAddFolderView() {
